@@ -1,4 +1,4 @@
-# SenangPlanner
+# spweb — SenangPlanner
 
 Editorial wedding and event planning website built with Next.js 15, TypeScript, and Tailwind CSS v4.
 
