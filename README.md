@@ -6,7 +6,7 @@ Editorial wedding and event planning website built with Next.js 15, TypeScript, 
 
 1. Copy `.env.example` to `.env.local`.
 2. Set `NEXT_PUBLIC_WA_NUMBER` to the WhatsApp number in international format without `+`.
-3. Optionally set `NEXT_PUBLIC_SITE_URL` and `AVAILABILITY_CSV_URL`.
+3. Optionally set `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_AVAILABILITY_CSV_URL`.
 4. Run `npm install`, then `npm run dev`.
 
 ## Editable content
@@ -23,7 +23,11 @@ The photo positions currently display sample images from the supplied HTML refer
 
 ## Availability sheet
 
-Publish a Google Sheet as CSV and set its published CSV URL in `AVAILABILITY_CSV_URL`. The header row must contain `date,status,note`; dates use `YYYY-MM-DD` and statuses are `kosong`, `hampir-penuh`, or `penuh`. The `note` column is optional. The API validates the requested `month=YYYY-MM` and caches the published sheet for 300 seconds. Keep the fallback list in `data/availability.ts` current if you want to show dates while no sheet is configured.
+Publish a Google Sheet as CSV and set its published CSV URL in `NEXT_PUBLIC_AVAILABILITY_CSV_URL`. Since GitHub Pages is static hosting, the browser fetches this public CSV directly; the sheet must be published with access for visitors. The header row must contain `date,status,note`; dates use `YYYY-MM-DD` and statuses are `kosong`, `hampir-penuh`, or `penuh`. The `note` column is optional. Keep the fallback list in `data/availability.ts` current if no sheet is configured.
+
+## GitHub Pages deployment
+
+The `main` branch deploys through `.github/workflows/deploy.yml` to `https://raimi-akasyah.github.io/spweb/`. The workflow exports a static site and publishes the `out/` folder. In repository Settings → Secrets and variables → Actions → Variables, optionally set `NEXT_PUBLIC_WA_NUMBER` and `NEXT_PUBLIC_AVAILABILITY_CSV_URL` for the public contact number and published sheet URL. GitHub Pages cannot run Next.js API routes or server code.
 
 ## Before launch
 

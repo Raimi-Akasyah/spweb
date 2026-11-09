@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { availabilityFallbackMessage } from "@/data/availability";
-import type { AvailabilityDate, AvailabilityStatus } from "@/lib/availability";
+import {
+  availabilityFallback,
+  availabilityFallbackMessage,
+} from "@/data/availability";
+import {
+  getAvailabilityForMonth,
+  parseAvailabilityCsv,
+  type AvailabilityDate,
+  type AvailabilityStatus,
+} from "@/lib/availability";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-
-type AvailabilityResponse = {
-  month: string;
-  dates: AvailabilityDate[];
-  source: "sheet" | "fallback";
-};
 
 const monthNames = [
   "Januari", "Februari", "Mac", "April", "Mei", "Jun",
@@ -49,19 +51,26 @@ export function AvailabilityCalendar() {
     const controller = new AbortController();
     setLoading(true);
     setError("");
+    setSelectedDate("");
 
-    fetch(`/api/availability?month=${month}`, { signal: controller.signal })
+    const csvUrl = process.env.NEXT_PUBLIC_AVAILABILITY_CSV_URL;
+    if (!csvUrl) {
+      setDates(availabilityFallback);
+      setSource("fallback");
+      setLoading(false);
+      return () => controller.abort();
+    }
+
+    fetch(csvUrl, { signal: controller.signal, cache: "no-store" })
       .then(async (response) => {
-        const result = (await response.json()) as AvailabilityResponse | { error: string };
-        if (!response.ok || !("dates" in result)) {
-          throw new Error("error" in result ? result.error : "Could not load availability.");
+        if (!response.ok) {
+          throw new Error(`Availability sheet returned ${response.status}.`);
         }
-        return result;
+        return parseAvailabilityCsv(await response.text());
       })
-      .then((result) => {
-        setDates(result.dates);
-        setSource(result.source);
-        setSelectedDate("");
+      .then((entries) => {
+        setDates(entries);
+        setSource("sheet");
       })
       .catch((cause: unknown) => {
         if (cause instanceof DOMException && cause.name === "AbortError") return;
@@ -70,6 +79,10 @@ export function AvailabilityCalendar() {
       .finally(() => setLoading(false));
 
     return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    setSelectedDate("");
   }, [month]);
 
   const cells = useMemo(() => {
@@ -83,8 +96,8 @@ export function AvailabilityCalendar() {
   }, [month]);
 
   const statusByDate = useMemo(
-    () => new Map(dates.map((item) => [item.date, item])),
-    [dates],
+    () => new Map(getAvailabilityForMonth(dates, month).map((item) => [item.date, item])),
+    [dates, month],
   );
   const title = (() => {
     const [, monthNumber] = month.split("-").map(Number);
