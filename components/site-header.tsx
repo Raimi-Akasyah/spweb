@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
 const menuLinks = [
@@ -30,7 +31,8 @@ export function SiteHeader() {
     <>
       <nav className="nav" aria-label="Navigasi utama">
         <Link className="logo" href="/#top" aria-label="SenangPlanner — halaman utama">
-          Senang Planner<i aria-hidden="true" />
+          <Image src="/images/senangplanner-wordmark.png" alt="SenangPlanner" width={372} height={160} unoptimized />
+          <span>Kami Datang, Anda Senang.</span>
         </Link>
         <div className="np">
           <button

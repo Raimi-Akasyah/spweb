@@ -26,10 +26,10 @@ const HEADERS = [
 ];
 const MAX_PAYMENT_PROOF_BYTES = 10 * 1024 * 1024;
 const PAYMENT_PROOF_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+const BOOKINGS_SPREADSHEET_ID = "1fBxefY_vrzAwi8JYqa_kwp3-PjppFrwJUe87PmElYVw";
 
 function setup() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  if (!spreadsheet) throw new Error("Open this script from the bookings Google Sheet.");
+  const spreadsheet = SpreadsheetApp.openById(BOOKINGS_SPREADSHEET_ID);
 
   PropertiesService.getScriptProperties().setProperty(
     "SPREADSHEET_ID",
@@ -197,7 +197,7 @@ function validateBooking_(parameters, parameterLists) {
     throw new Error("Nyatakan jenis majlis lain (2–100 aksara).");
   }
   if (eventTime.length < 3 || eventTime.length > 80) throw new Error("Masukkan masa majlis.");
-  if (packageName.length > 80) throw new Error("Pilihan pakej tidak sah.");
+  if (packageName !== "Senang Wedding Package 2027") throw new Error("Pilih Senang Wedding Package 2027.");
   if (!/^\d{1,4}$/.test(guestCountText) || Number(guestCountText) < 1) {
     throw new Error("Bilangan tetamu tidak sah.");
   }
@@ -207,11 +207,12 @@ function validateBooking_(parameters, parameterLists) {
   if (notes.length > 500) throw new Error("Nota mestilah kurang daripada 500 aksara.");
   if (venue.length < 2 || venue.length > 160) throw new Error("Masukkan lokasi majlis (2–160 aksara).");
   const allowedServices = [
-    "Event Coordinator",
     "Emcee",
-    "Event Planner",
-    "PA System (include Audioman)",
-    "Audioman (tanpa PA system)",
+    "Wedding Coordinator",
+    "Floor Manager",
+    "Crew",
+    "Bride Assistant",
+    "PA System + Audioman",
     "Lain-lain",
   ];
   if (!services.length || services.some(function (service) {

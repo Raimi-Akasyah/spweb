@@ -1,36 +1,39 @@
-import { Search, ShieldCheck, Tag } from "lucide-react";
 import { about } from "@/data/about";
+import { ImageLightbox } from "@/components/image-lightbox";
 
 export function AboutSection() {
   return (
     <section id="tentang">
       <div className="w">
-        <h2 className="rv">Detail yang <span className="ser mk">kau tak perlu</span> peningkan.</h2>
-        <div className="bento">
-          <article className="bc bA rv">
-            <div className="im p-veil" role="img" aria-label="Pasangan pengantin di bawah veil" />
-            <div className="tx">
-              <p className="big">Majlis anda, <span className="ser">zero drama.</span></p>
-              <p>Kami urus semua benda remeh—dari kejar vendor, jaga bajet, sampai susun atur dewan—supaya kau boleh betul-betul hadir dan enjoy setiap momen tanpa buka Excel.</p>
-            </div>
+        <div className="about-heading">
+          <div className="pill">Kenali Senang Planners</div>
+          <h2>Kami datang, <span className="ser mk">anda senang.</span></h2>
+          <p>{about.intro}</p>
+        </div>
+        <div className="about-values">
+          <article className="about-value">
+            <span className="ey">Visi</span>
+            <h3>Satu pusat untuk majlis anda.</h3>
+            <p>{about.vision}</p>
           </article>
-          <article className="bc bB rv">
-            <div className="ico"><Search aria-hidden="true" /></div>
-            <div><h3>Detail Obsessed</h3><p style={{ maxWidth: "34ch" }}>Dari susun atur meja sampai lagu masuk dewan, semua kita semak sama-sama.</p></div>
-          </article>
-          <article className="bc bC rv">
-            <div className="ico"><ShieldCheck aria-hidden="true" /></div>
-            <div><h3>Backup Plan Ready</h3><p>Hujan tiba-tiba atau vendor lambat? Team kami dah standby Plan B tanpa kau perasan.</p></div>
-          </article>
-          <article className="bc bD rv">
-            <div className="ico"><Tag aria-hidden="true" /></div>
-            <div><h3>Harga Jujur</h3><p>Skop kerja dan kos dibentang awal-awal. Tiada caj tersembunyi lepas sign.</p></div>
+          <article className="about-value about-value--mission">
+            <span className="ey">Misi</span>
+            <ul>{about.mission.map((item) => <li key={item}>{item}</li>)}</ul>
           </article>
         </div>
-        <div className="stats rv">
-          {about.stats.map((stat) => (
-            <div key={stat.label}><b>{stat.value}</b><span>{stat.label}</span></div>
-          ))}
+        <div className="about-objectives">
+          <div>
+            <h3>Matlamat kami</h3>
+            <ul>{about.objectives.map((item) => <li key={item}>{item}</li>)}</ul>
+          </div>
+          <ImageLightbox
+            src="/images/vision-mission.jpg"
+            alt="Infografik visi dan misi Senang Planners"
+            triggerLabel="Tekan untuk besarkan visi dan misi"
+            className="mission-poster-trigger"
+            width={1080}
+            height={595}
+          />
         </div>
       </div>
     </section>

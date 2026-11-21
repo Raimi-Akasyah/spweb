@@ -14,24 +14,25 @@ Editorial wedding and event planning website built with Next.js 15, TypeScript, 
 Content is kept in `data/*.ts`:
 
 - `site.ts`: region and real social/review links.
-- `about.ts`, `vision.ts`: about copy, pillars and statistics.
+- `about.ts`: company introduction, vision, mission, objectives and benefits.
 - `services.ts`, `packages.ts`: service details and WhatsApp enquiry text.
-- `reviews.ts`, `team.ts`, `gallery.ts`: client-approved reviews, portraits, event photos and reel links.
+- `reviews.ts`, `team.ts`, `gallery.ts`: reviews, team roles and the supplied company/package images.
 - `availability.ts`: fallback availability data and calendar note.
 
-The photo positions currently display sample images from the supplied HTML reference so the layout is visible without blank placeholders. They are illustrative only, not SenangPlanner client work. Replace sample URLs and captions with client-approved images/reels before launch. Local photos can be added under `public/images` and referenced from the same content data.
+The hero, team, vision/mission and package areas use images supplied for Senang Planners. Gallery captions are limited to the package and company information currently provided; add approved event photos when available.
 
 ## Booking storage and calendar
 
-The homepage's **Book Event** and **Pick your date** buttons open the five-step event-pass wizard at `/booking/`; the booking flow is a separate page, not an inline homepage form. It collects contact details, date and time, venue, event type, requested services, guest count, theme and budget, deposit and balance amounts, optional payment-proof image, and consent to the terms. Submissions are stored as rows in the Google Sheet through the bound Apps Script in `apps-script/Code.gs`. The script confirms a date immediately, rejects a competing booking for the same date, and returns confirmed dates to the calendar. New columns are appended automatically when the script next accesses an existing bookings sheet.
+The homepage's **Book Event** and **Pick your date** buttons open the five-step event-pass wizard at `/booking/`; the booking flow is a separate page, not an inline homepage form. It collects contact details, date and time, venue, event type, requested services, guest count, theme and budget, deposit and balance amounts, optional payment-proof image, and consent to the terms. Submissions are stored as rows in the Google Sheet through the Apps Script web app in `apps-script/Code.gs`. The script confirms a date immediately, rejects a competing booking for the same date, and returns confirmed dates to the calendar. New columns are appended automatically when the script next accesses an existing bookings sheet.
 
 In local development, use **Isi contoh (demo)** to preview the form with sample details. This only fills the browser form; it does not submit or attach a payment image. Keep the Apps Script URL unset while reviewing the draft.
 
-1. Create a Google Sheet for bookings and open **Extensions → Apps Script**.
-2. Paste `apps-script/Code.gs` into the script editor and save.
-3. Run `setup()` once from the editor and approve the requested Sheets and Drive access. This creates the `Bookings` tab and a private Drive folder for optional payment-proof images.
-4. Deploy as a **Web app**, execute as your account, and allow access to **Anyone** so the public site can submit. Copy the deployment URL ending in `/exec`.
-5. In GitHub, open **Settings → Secrets and variables → Actions → Variables**, add `NEXT_PUBLIC_APPS_SCRIPT_URL` with that URL, then run **Deploy to GitHub Pages** from the Actions tab. The URL is public by design; do not put credentials in the website or repository.
+The booking backend targets spreadsheet `1fBxefY_vrzAwi8JYqa_kwp3-PjppFrwJUe87PmElYVw`. The Apps Script project URL in a browser is an editor link, not the web-app endpoint needed by the site.
+
+1. The Apps Script project's `Code.gs` is synchronized with `apps-script/Code.gs` and exposes `setup()`, `doGet()` and `doPost()`.
+2. Run `setup()` once from the editor and approve the requested Sheets and Drive access. This creates the `Bookings` tab and a private Drive folder for optional payment-proof images.
+3. Deploy as a **Web app**, execute as your account, and allow access to **Anyone** so the public site can submit. Copy the deployment URL ending in `/exec` (it is different from the project/editor URL).
+4. Set `NEXT_PUBLIC_APPS_SCRIPT_URL` to that `/exec` URL in `.env.local` for local development. In GitHub, set it under **Settings → Secrets and variables → Actions → Variables**, then run **Deploy to GitHub Pages**.
 
 Payment-proof uploads are limited to 10 MB and common image formats. Files stay private in the Drive folder; the sheet stores their Drive links. Confirm the full payment terms and account instructions before launch. The Google Form's account information is not automatically captured by this custom form; email is an optional field.
 

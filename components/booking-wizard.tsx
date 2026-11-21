@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { availabilityFallback } from "@/data/availability";
 import {
   getAvailabilityForMonth,
@@ -9,6 +10,7 @@ import {
   type AvailabilityDate,
   type AvailabilityStatus,
 } from "@/lib/availability";
+import { ImageLightbox } from "@/components/image-lightbox";
 
 const monthNames = [
   "Januari", "Februari", "Mac", "April", "Mei", "Jun",
@@ -17,12 +19,16 @@ const monthNames = [
 const weekDays = ["Isn", "Sel", "Rab", "Kha", "Jum", "Sab", "Aha"];
 const eventTypes = ["Nikah", "Sanding", "Nikah + Sanding", "Majlis Hari Jadi", "Lain-lain"];
 const serviceOptions = [
-  "Event Coordinator",
   "Emcee",
-  "Event Planner",
-  "PA System (include Audioman)",
-  "Audioman (tanpa PA system)",
+  "Wedding Coordinator",
+  "Floor Manager",
+  "Crew",
+  "Bride Assistant",
+  "PA System + Audioman",
   "Lain-lain",
+];
+const packageOptions = [
+  "Senang Wedding Package 2027",
 ];
 
 type AvailabilityPayload = {
@@ -36,6 +42,7 @@ type TicketDetails = {
   eventTime: string;
   eventType: string;
   eventTypeOther: string;
+  packageName: string;
   guestCount: string;
   venue: string;
   services: string[];
@@ -47,6 +54,7 @@ const emptyTicketDetails: TicketDetails = {
   eventTime: "",
   eventType: "",
   eventTypeOther: "",
+  packageName: "",
   guestCount: "100",
   venue: "",
   services: [],
@@ -161,6 +169,7 @@ export function BookingWizard() {
       eventTime: String(values.get("eventTime") ?? ""),
       eventType: String(values.get("eventType") ?? ""),
       eventTypeOther: String(values.get("eventTypeOther") ?? ""),
+      packageName: String(values.get("packageName") ?? ""),
       guestCount: String(values.get("guestCount") ?? ""),
       venue: String(values.get("venue") ?? ""),
       services: values.getAll("services").map(String),
@@ -365,6 +374,7 @@ export function BookingWizard() {
     setValue("email", "aina.rahman@example.com");
     setValue("eventTypeOther", "");
     setValue("eventTime", "11:00pg - 3:00ptg");
+    setValue("packageName", "Senang Wedding Package 2027");
     setValue("guestCount", "300");
     setValue("venue", "Dewan Seri Putra, Bangi");
     setValue("serviceOther", "");
@@ -376,7 +386,7 @@ export function BookingWizard() {
     setBookingError("");
 
     form.querySelectorAll<HTMLInputElement>('input[name="services"]').forEach((input) => {
-      input.checked = ["Event Coordinator", "Emcee", "Event Planner"].includes(input.value);
+      input.checked = ["Emcee", "Wedding Coordinator", "Floor Manager", "Crew", "Bride Assistant", "PA System + Audioman"].includes(input.value);
     });
     form.querySelectorAll<HTMLInputElement>('input[name="eventType"]').forEach((input) => {
       input.checked = input.value === "Nikah + Sanding";
@@ -420,6 +430,10 @@ export function BookingWizard() {
       }
       if (value("eventTime").length < 3) {
         setBookingError("Masukkan masa majlis.");
+        return false;
+      }
+      if (!value("packageName")) {
+        setBookingError("Sila pilih pakej.");
         return false;
       }
       if (value("venue").length < 2) {
@@ -654,7 +668,8 @@ export function BookingWizard() {
       <div className="booking-page__wrap">
         <header className="booking-page__header">
           <Link className="booking-page__logo" href="/">
-            SenangPlanner<i aria-hidden="true" />
+            <Image src="/images/senangplanner-wordmark.png" alt="SenangPlanner" width={372} height={160} unoptimized />
+            <span className="booking-page__tagline">Kami Datang, Anda Senang.</span>
           </Link>
           <Link className="booking-page__home-link" href="/">← Laman utama</Link>
         </header>
@@ -816,6 +831,15 @@ export function BookingWizard() {
                   </label>
                   <div className="booking-wizard__two">
                     <label className="booking-wizard__label">
+                      Pilihan pakej <small>wajib</small>
+                      <select name="packageName" defaultValue="">
+                        <option value="" disabled>Pilih pakej</option>
+                        {packageOptions.map((option) => (
+                          <option value={option} key={option}>{option}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="booking-wizard__label">
                       Masa majlis <small>wajib</small>
                       <input name="eventTime" placeholder="Contoh: 11:00pg - 3:00ptg" minLength={3} maxLength={80} />
                     </label>
@@ -828,6 +852,14 @@ export function BookingWizard() {
                       />
                     </label>
                   </div>
+                  <ImageLightbox
+                    src="/images/senang-wedding-package-2027.jpg"
+                    alt="Flyer Senang Wedding Package 2027"
+                    triggerLabel="Senang Wedding Package 2027 · tekan untuk besarkan flyer"
+                    className="booking-package-preview"
+                    width={768}
+                    height={1024}
+                  />
                   <label className="booking-wizard__label">
                     Lokasi / tempat
                     <input name="venue" maxLength={160} placeholder="Contoh: Dewan Seri Putra, Bangi" />
@@ -991,6 +1023,7 @@ export function BookingWizard() {
                     <div><small>Hari</small><strong>{selectedDate ? formatSelectedDate(selectedDate).split(",")[0] : "—"}</strong></div>
                     <div><small>Masa</small><strong>{ticketDetails.eventTime || "—"}</strong></div>
                     <div><small>Jenis</small><strong>{ticketType || "—"}</strong></div>
+                    <div className="booking-ticket__wide"><small>Pakej</small><strong>{ticketDetails.packageName || "—"}</strong></div>
                     <div><small>Pax</small><strong>{ticketDetails.guestCount ? `${ticketDetails.guestCount} pax` : "—"}</strong></div>
                     <div className="booking-ticket__wide"><small>Lokasi</small><strong>{ticketDetails.venue || "—"}</strong></div>
                     <div className="booking-ticket__wide"><small>Servis</small><strong>{ticketServices || "—"}</strong></div>

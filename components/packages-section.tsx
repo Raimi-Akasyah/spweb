@@ -4,15 +4,10 @@ import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { packageAddons, packageFaqs, packages } from "@/data/packages";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-
-const packageFilters = [
-  "Intimate Nikah · ≤100 pax",
-  "Garden / Hall · 200–400 pax",
-  "Full Grand · 500+ pax",
-];
+import { ImageLightbox } from "@/components/image-lightbox";
 
 export function PackagesSection() {
-  const [activePackage, setActivePackage] = useState(1);
+  const [activePackage, setActivePackage] = useState(0);
 
   function openOnHover(index: number) {
     if (window.matchMedia("(hover: hover) and (min-width: 801px)").matches) {
@@ -26,20 +21,7 @@ export function PackagesSection() {
         <div className="w">
           <div className="pill">Pakej Perkahwinan &amp; Acara · 2026 / 2027</div>
           <h1>Pilih <span className="ser mk">vibe</span> anda.</h1>
-          <p className="sub">Setiap majlis lain ceritanya. Pilih saiz &amp; gaya majlis di bawah untuk tengok pakej yang paling ngam—tiada caj tersembunyi.</p>
-          <div className="vf" role="group" aria-label="Pilih gaya majlis">
-            {packageFilters.map((label, index) => (
-              <button
-                type="button"
-                className={activePackage === index ? "on" : ""}
-                key={label}
-                onClick={() => setActivePackage(index)}
-                aria-pressed={activePackage === index}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+          <p className="sub">Lihat kandungan Senang Wedding Package 2027 dan servis yang pasukan kami sediakan untuk hari istimewa anda.</p>
           <div className="acc">
             {packages.map((item, index) => (
               <article
@@ -65,6 +47,14 @@ export function PackagesSection() {
                     <div className="inc">
                       {item.features.map((feature) => <span key={feature}>{feature}</span>)}
                     </div>
+                    <ImageLightbox
+                      src="/images/senang-wedding-package-2027.jpg"
+                      alt="Flyer Senang Wedding Package 2027"
+                      triggerLabel="Tekan untuk besarkan flyer pakej"
+                      className="package-flyer-trigger"
+                      width={768}
+                      height={1024}
+                    />
                   </div>
                   <div>
                     <div className="pr"><span>{item.price}</span><small>{item.guestRange}</small></div>
@@ -80,13 +70,13 @@ export function PackagesSection() {
               </article>
             ))}
           </div>
-          <p className="note">Harga anggaran untuk rujukan awal. Sebut harga tepat dikongsi lepas semak tarikh &amp; lokasi.</p>
+          <p className="note">Harga pakej dikongsi selepas semakan tarikh dan lokasi.</p>
         </div>
       </header>
 
       <section className="addons">
         <div className="w">
-          <h2>Add-on yang <span className="ser">naikkan seri.</span></h2>
+          <h2>Termasuk dalam <span className="ser">pakej.</span></h2>
           <div className="ag">
             {packageAddons.map((addon) => (
               <article className="ac" key={addon.title}>

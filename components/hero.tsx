@@ -254,9 +254,9 @@ export function Hero() {
             <div className="fine">Free vibe check · Reply bawah 24 jam · Transparent pricing</div>
           </div>
           <div className="col" id="col" aria-label="Kolaj majlis perkahwinan">
-            <div className="fr c1"><div className="im p-window" role="img" aria-label="Pasangan pengantin Gen Z tersenyum" /></div>
-            <div className="fr c2"><div className="im p-sea" role="img" aria-label="Pasangan berjalan di tepi pantai" /></div>
-            <div className="fr c3"><div className="im p-warm" role="img" aria-label="Pasangan pengantin di bawah veil" /></div>
+            <div className="fr c1"><div className="im p-window" role="img" aria-label="Pasangan pengantin di taman" /></div>
+            <div className="fr c2"><div className="im p-sea" role="img" aria-label="Pasangan pengantin di tepi laut" /></div>
+            <div className="fr c3"><div className="im p-warm" role="img" aria-label="Majlis pengantin SenangPlanner" /></div>
             <div className="tkm"><small>Event Pass</small>Tarikh anda.</div>
           </div>
         </div>
