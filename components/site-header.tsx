@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { site } from "@/data/site";
+import { ArrowUpRight } from "lucide-react";
 
-const links = [
-  ["Home", "#home"],
-  ["About Us", "#about"],
-  ["Our Services", "#services"],
-  ["Our Clients", "#reviews"],
-  ["Media Gallery", "#gallery"],
-  ["Contact Us", "#contact"],
+const menuLinks = [
+  ["Home", "/#top"],
+  ["Check Tarikh", "/#tarikh"],
+  ["Pakej", "/packages"],
+  ["Media Gallery", "/gallery"],
+  ["Vibe Check & Pasukan", "/vibe-check"],
+  ["Testimoni", "/#kata"],
+  ["DM Kami", "/#hubungi"],
 ];
 
 export function SiteHeader() {
@@ -27,50 +28,39 @@ export function SiteHeader() {
 
   return (
     <>
-      <Link className="announcement" href="/booking">
-        <span>Tarikh majlis anda masih tersedia?</span>
-        <span className="announcement__link">Semak availability <span aria-hidden="true">↴</span></span>
-      </Link>
-      <header className="site-header">
-        <a className="wordmark" href="#home" aria-label="SenangPlanner — Home">
-          Senang<span>Planner</span>
-        </a>
-        <nav className="desktop-nav" aria-label="Main navigation">
-          {links.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
-          ))}
-        </nav>
-        <Link className="header-book" href="/booking">
-          Pick your date <span aria-hidden="true">↗</span>
+      <nav className="nav" aria-label="Navigasi utama">
+        <Link className="logo" href="/#top" aria-label="SenangPlanner — halaman utama">
+          Senang Planner<i aria-hidden="true" />
         </Link>
-      </header>
-      <div className="fixed-tabs" aria-label="Quick navigation">
-        <button type="button" onClick={() => setMenuOpen(true)}>MENU <span aria-hidden="true">↴</span></button>
-        <a href="#packages">PACKAGES <span aria-hidden="true">↴</span></a>
-        <Link className="button button--dark" href="/booking">
-          BOOK EVENT <span aria-hidden="true">↗</span>
-        </Link>
-      </div>
-      {menuOpen && (
-        <div className="menu-overlay" role="dialog" aria-modal="true" aria-label="Main menu">
+        <div className="np">
           <button
             type="button"
-            className="menu-close"
-            onClick={() => setMenuOpen(false)}
-            aria-label="Close menu"
+            className="btn"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-expanded={menuOpen}
+            aria-controls="main-menu"
           >
-            Close <span aria-hidden="true">×</span>
+            {menuOpen ? "Close" : "Menu"}
           </button>
-          <p className="eyebrow">SenangPlanner · Seluruh Malaysia</p>
-          <nav className="menu-links">
-            {links.map(([label, href], index) => (
-              <a key={href} href={href} onClick={() => setMenuOpen(false)}>
-                <span>0{index + 1}</span>{label}<span aria-hidden="true">↗</span>
-              </a>
-            ))}
-          </nav>
-          <p className="menu-caption">{site.descriptor}</p>
+          <Link className="btn pk" href="/packages">Pakej</Link>
+          <Link className="btn gd" href="/booking">
+            Lock Tarikh <ArrowUpRight className="i" aria-hidden="true" />
+          </Link>
         </div>
+      </nav>
+      {menuOpen && (
+        <nav className="menu on" id="main-menu" aria-label="Semua halaman">
+          {menuLinks.map(([label, href], index) => (
+            <Link
+              className={index === 0 ? "cur" : ""}
+              href={href}
+              key={href}
+              onClick={() => setMenuOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
       )}
     </>
   );

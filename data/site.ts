@@ -6,5 +6,5 @@ export const site = {
   tiktokUrl: "",
   googleReviewsUrl: "",
   location: "Seluruh Malaysia",
-  hours: "Setiap hari · Dengan janji temu",
+  hours: "Setiap hari · 10am – 9pm",
 };

@@ -1,30 +1,30 @@
 export const team = [
   {
-    name: "Nama 1",
-    role: "Founder",
-    image:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?fm=jpg&q=80&w=900&auto=format&fit=crop",
-    message: "Hi, saya nak berbual dengan Nama 1.",
+    name: "Hana",
+    initials: "HN",
+    role: "Founder & Vibe Director",
+    bio: "Susun konsep, moodboard, dan pastikan bajet kau tak lari jauh dari pelan asal.",
+    message: "Hi, saya nak berbual dengan Hana.",
   },
   {
-    name: "Nama 2",
+    name: "Irfan",
+    initials: "IR",
     role: "Lead Coordinator",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?fm=jpg&q=80&w=900&auto=format&fit=crop",
-    message: "Hi, saya nak berbual dengan Nama 2.",
+    bio: "Ketua operasi di tapak. Kalau ada vendor lambat, dia orang pertama yang settlekan.",
+    message: "Hi, saya nak berbual dengan Irfan.",
   },
   {
-    name: "Nama 3",
-    role: "Emcee",
-    image:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?fm=jpg&q=80&w=900&auto=format&fit=crop",
-    message: "Hi, saya nak berbual dengan Nama 3.",
+    name: "Zati",
+    initials: "ZT",
+    role: "Emcee & Crowd Hype",
+    bio: "Jaga flow majlis dengan gaya santai, mesra keluarga, dan bebas skrip klise.",
+    message: "Hi, saya nak berbual dengan Zati.",
   },
   {
-    name: "Nama 4",
-    role: "Guest Management",
-    image:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?fm=jpg&q=80&w=900&auto=format&fit=crop",
-    message: "Hi, saya nak berbual dengan Nama 4.",
+    name: "Nabil",
+    initials: "NB",
+    role: "Guest & RSVP Tech",
+    bio: "Urus kad digital, QR check-in, dan susunan meja supaya tetamu tak tercari-cari.",
+    message: "Hi, saya nak berbual dengan Nabil.",
   },
 ];

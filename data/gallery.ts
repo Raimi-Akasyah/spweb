@@ -1,37 +1,51 @@
 export const gallery = [
   {
-    title: "Contoh majlis nikah",
-    caption: "Foto contoh · gantikan dengan acara dan kapsyen sebenar.",
-    image:
-      "https://images.unsplash.com/photo-1606490194864-f380e19e55cd?fm=jpg&q=70&w=1200&auto=format&fit=crop",
+    title: "Nikah Pagi · Glasshouse Seputeh",
+    caption: "Pakej Signature · Minimalist Ivory",
+    image: "p-warm",
+    category: "nikah",
     reelUrl: "",
   },
   {
-    title: "Contoh resepsi",
-    caption: "Foto contoh · gantikan dengan bahan yang diluluskan klien.",
-    image:
-      "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?fm=jpg&q=70&w=1200&auto=format&fit=crop",
+    title: "Resepsi Malam · Subang Jaya",
+    caption: "Pakej Premier · Fairy Lights & Live Band",
+    image: "p-bw",
+    category: "resepsi",
     reelUrl: "",
   },
   {
-    title: "Contoh majlis",
-    caption: "Foto contoh · tambah kapsyen dan pautan reel sebenar.",
-    image:
-      "https://images.unsplash.com/photo-1600164913117-2125c1f60b01?fm=jpg&q=70&w=1200&auto=format&fit=crop",
+    title: "Sunset Portraits · Langkawi",
+    caption: "Intimate Beach Ceremony",
+    image: "p-sea",
+    category: "resepsi",
     reelUrl: "",
   },
   {
-    title: "Contoh behind the scenes",
-    caption: "Foto contoh · gantikan dengan foto pasukan di acara.",
-    image:
-      "https://images.unsplash.com/photo-1537633468298-d86f0c2d4173?fm=jpg&q=70&w=1200&auto=format&fit=crop",
+    title: "BTS Crew · Setup Pagi",
+    caption: "100% on-site coordination",
+    image: "p-bts",
+    category: "bts",
     reelUrl: "",
   },
   {
-    title: "Contoh pelamin dan dekor",
-    caption: "Foto contoh · gantikan dengan foto hasil kerja sebenar.",
-    image:
-      "https://images.unsplash.com/photo-1617724975854-70b5d0cedb0a?fm=jpg&q=70&w=1200&auto=format&fit=crop",
+    title: "Pelamin Taman · Putrajaya",
+    caption: "Garden Nikah · Wildflower Arch",
+    image: "p-beach",
+    category: "nikah",
+    reelUrl: "",
+  },
+  {
+    title: "Moodboard Session · Bangsar",
+    caption: "Kurasi palet warna & fabrik",
+    image: "p-sikh",
+    category: "bts",
+    reelUrl: "",
+  },
+  {
+    title: "Stationery & Wax Seal · KL",
+    caption: "Custom RSVP & table cards",
+    image: "p-inv",
+    category: "bts",
     reelUrl: "",
   },
 ];

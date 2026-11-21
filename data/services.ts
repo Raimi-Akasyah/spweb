@@ -1,32 +1,29 @@
 export const services = [
   {
     number: "01",
-    title: "Planning & Consultation",
+    title: "Moodboard to Reality",
     description:
-      "Rangka perjalanan majlis, bajet dan keutamaan bersama pasukan kami.",
+      "Kita susun tema, bajet, dan senarai vendor yang betul-betul masuk dengan taste kau.",
     message:
       "Hi SenangPlanner, saya ingin berbincang tentang Planning & Consultation.",
-    image:
-      "https://images.unsplash.com/photo-1630526720753-aa4e71acf67d?fm=jpg&q=70&w=1000&auto=format&fit=crop",
+    image: "p-sikh",
   },
   {
     number: "02",
-    title: "Coordination & Emcee",
+    title: "Day-Of Chaos Tamer",
     description:
-      "Koordinasi hari acara dan pengacaraan yang menjaga aliran majlis.",
+      "Koordinasi hari majlis dan emcee yang jaga flow acara supaya semua berjalan lancar.",
     message:
       "Hi SenangPlanner, saya ingin tahu tentang Coordination & Emcee.",
-    image:
-      "https://images.unsplash.com/photo-1600164913117-2125c1f60b01?fm=jpg&q=70&w=1000&auto=format&fit=crop",
+    image: "p-bw",
   },
   {
     number: "03",
     title: "Guests & Digital Invites",
     description:
-      "Bantuan RSVP, pengurusan tetamu dan jemputan digital untuk hari anda.",
+      "Kad jemputan digital yang lawa, RSVP automatik, dan susunan meja tetamu tanpa kertas.",
     message:
       "Hi SenangPlanner, saya ingin tahu tentang Guests & Digital Invites.",
-    image:
-      "https://images.unsplash.com/photo-1622277430358-f4d134452e2e?fm=jpg&q=70&w=1000&auto=format&fit=crop",
+    image: "p-inv",
   },
 ];

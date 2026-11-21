@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, Instrument_Serif, Sora } from "next/font/google";
+import { Hanken_Grotesk, Instrument_Serif, Outfit, Sora } from "next/font/google";
 import "./globals.css";
 import "./gen-z.css";
 import "./cinema-design.css";
+import "./stitch.css";
 import "./booking.css";
 
 const sora = Sora({
@@ -21,6 +22,12 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -48,7 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ms">
-      <body className={`${sora.variable} ${hanken.variable} ${instrumentSerif.variable}`}>
+      <body className={`${sora.variable} ${hanken.variable} ${instrumentSerif.variable} ${outfit.variable}`}>
         {children}
       </body>
     </html>

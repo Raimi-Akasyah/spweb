@@ -1,6 +1,6 @@
 export const vision = {
   vision:
-    "Menjadi rakan yang dipercayai untuk meraikan detik penting dengan lebih tenang dan bermakna.",
+    "Menjadi rakan yang dipercayai supaya majlis kau terasa macam meraikan cinta dengan orang tersayang—bukan kerja part-time mengurus vendor.",
   mission:
-    "Mengurus setiap acara dengan teliti, komunikasi yang jujur dan perhatian kepada pengalaman setiap tetamu.",
+    "WhatsApp dibalas laju, bajet dikawal ketat tanpa caj tersembunyi, dan setiap tetamu pulang dengan memori yang manis.",
 };

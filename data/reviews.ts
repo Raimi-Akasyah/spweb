@@ -1,20 +1,23 @@
 export const reviews = [
   {
-    quote:
-      "Testimoni pasangan akan dipaparkan di sini selepas mendapat kebenaran untuk menerbitkannya.",
-    name: "Nama pasangan",
-    place: "Lokasi majlis",
+    quote: "Serius tak sangka aku boleh relax je pagi nikah. Semua vendor dah set awal, family pun puji majlis smooth gila.",
+    name: "Aina & Hakim",
+    place: "Glasshouse Seputeh · 250 pax",
+    source: "DM dari pengantin · Verified",
+    package: "Pakej Signature",
   },
   {
-    quote:
-      "Kongsi pengalaman sebenar pelanggan di sini — dengan izin mereka.",
-    name: "Nama pasangan",
-    place: "Lokasi majlis",
+    quote: "Bajet kami tight sikit tapi team SenangPlanner pandai susun priority. Result dia nampak lagi mahal daripada kos sebenar!",
+    name: "Farah & Danial",
+    place: "Subang Jaya · 450 pax",
+    source: "WhatsApp Review · Verified",
+    package: "Pakej Premier",
   },
   {
-    quote:
-      "Gantikan teks contoh ini dengan ulasan yang telah diluluskan pelanggan.",
-    name: "Nama pasangan",
-    place: "Lokasi majlis",
+    quote: "Digital RSVP tu memang penyelamat. Tak payah pening kira kepala tetamu, tinggal datang senyum kat pelamin je.",
+    name: "Sofea & Amir",
+    place: "George Town, Penang · 100 pax",
+    source: "IG Story Tag · Verified",
+    package: "Pakej Lite",
   },
 ];

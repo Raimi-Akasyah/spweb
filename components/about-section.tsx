@@ -1,58 +1,37 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { animate, useInView, useReducedMotion } from "motion/react";
+import { Search, ShieldCheck, Tag } from "lucide-react";
 import { about } from "@/data/about";
-
-function StatValue({ value }: { value: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.6 });
-  const reduceMotion = useReducedMotion();
-  const [display, setDisplay] = useState(value);
-  const number = Number(value.replace(/[^\d.]/g, ""));
-  const suffix = value.replace(/[\d.]/g, "");
-
-  useEffect(() => {
-    if (!inView || !Number.isFinite(number) || !value.match(/\d/)) return;
-    if (reduceMotion) {
-      setDisplay(value);
-      return;
-    }
-
-    const controls = animate(0, number, {
-      duration: 1.2,
-      onUpdate: (current) => setDisplay(`${Math.round(current)}${suffix}`),
-    });
-    return () => controls.stop();
-  }, [inView, number, reduceMotion, suffix, value]);
-
-  return <span ref={ref}>{display}</span>;
-}
 
 export function AboutSection() {
   return (
-    <section className="about section-shell" id="about">
-      <div className="section-heading">
-        <p className="eyebrow">Tentang SenangPlanner</p>
-        <h2>{about.heading}</h2>
-      </div>
-      <p className="about__intro">{about.paragraph}</p>
-      <div className="pillars">
-        {about.pillars.map((pillar, index) => (
-          <article className="pillar" key={pillar.title}>
-            <span className="pillar__number">0{index + 1}</span>
-            <h3>{pillar.title}</h3>
-            <p>{pillar.description}</p>
+    <section id="tentang">
+      <div className="w">
+        <h2 className="rv">Detail yang <span className="ser mk">kau tak perlu</span> peningkan.</h2>
+        <div className="bento">
+          <article className="bc bA rv">
+            <div className="im p-veil" role="img" aria-label="Pasangan pengantin di bawah veil" />
+            <div className="tx">
+              <p className="big">Majlis anda, <span className="ser">zero drama.</span></p>
+              <p>Kami urus semua benda remeh—dari kejar vendor, jaga bajet, sampai susun atur dewan—supaya kau boleh betul-betul hadir dan enjoy setiap momen tanpa buka Excel.</p>
+            </div>
           </article>
-        ))}
-      </div>
-      <div className="stats">
-        {about.stats.map((stat) => (
-          <div className="stat" key={stat.label}>
-            <strong><StatValue value={stat.value} /></strong>
-            <span>{stat.label}</span>
-          </div>
-        ))}
+          <article className="bc bB rv">
+            <div className="ico"><Search aria-hidden="true" /></div>
+            <div><h3>Detail Obsessed</h3><p style={{ maxWidth: "34ch" }}>Dari susun atur meja sampai lagu masuk dewan, semua kita semak sama-sama.</p></div>
+          </article>
+          <article className="bc bC rv">
+            <div className="ico"><ShieldCheck aria-hidden="true" /></div>
+            <div><h3>Backup Plan Ready</h3><p>Hujan tiba-tiba atau vendor lambat? Team kami dah standby Plan B tanpa kau perasan.</p></div>
+          </article>
+          <article className="bc bD rv">
+            <div className="ico"><Tag aria-hidden="true" /></div>
+            <div><h3>Harga Jujur</h3><p>Skop kerja dan kos dibentang awal-awal. Tiada caj tersembunyi lepas sign.</p></div>
+          </article>
+        </div>
+        <div className="stats rv">
+          {about.stats.map((stat) => (
+            <div key={stat.label}><b>{stat.value}</b><span>{stat.label}</span></div>
+          ))}
+        </div>
       </div>
     </section>
   );

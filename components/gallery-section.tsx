@@ -1,61 +1,74 @@
 "use client";
 
-import { useState } from "react";
-import { gallery, highlightEmbedUrl } from "@/data/gallery";
-import { PhotoPlaceholder } from "@/components/photo-placeholder";
+import { useMemo, useState } from "react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { gallery } from "@/data/gallery";
+
+const filters = [
+  { key: "all", label: `Semua (${gallery.length})` },
+  { key: "nikah", label: "Nikah & Pelamin" },
+  { key: "resepsi", label: "Resepsi & Potret" },
+  { key: "bts", label: "BTS & Detail" },
+];
+const layouts = ["ga", "gb", "gc", "gd", "ge", "gf2", "gf2"];
 
 export function GallerySection() {
-  const [playing, setPlaying] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("all");
+  const items = useMemo(
+    () => gallery.filter((item) => activeFilter === "all" || item.category === activeFilter),
+    [activeFilter],
+  );
 
   return (
-    <section className="gallery section-shell" id="gallery">
-      <div className="section-heading section-heading--row">
-        <div>
-          <p className="eyebrow">Cerita yang telah kami raikan</p>
-          <h2>Media Gallery</h2>
+    <>
+      <header className="ph">
+        <div className="w">
+          <div className="pill">Real Weddings &amp; BTS · 35mm Film Look</div>
+          <h1>Media <span className="ser mk">Gallery.</span></h1>
+          <p className="sub">Detik sebenar daripada majlis pasangan kami—dari setup pagi, nikah yang tenang, sampai last song atas dance floor.</p>
+          <div className="gf" role="group" aria-label="Tapis kategori galeri">
+            {filters.map((filter) => (
+              <button
+                type="button"
+                className={activeFilter === filter.key ? "on" : ""}
+                key={filter.key}
+                onClick={() => setActiveFilter(filter.key)}
+                aria-pressed={activeFilter === filter.key}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
         </div>
-        <p>Detik sebenar, daripada majlis sebenar — dikongsi dengan izin.</p>
-      </div>
-      <div className="gallery-grid">
-        {gallery.map((item, index) => (
-          <article className={`gallery-item gallery-item--${index + 1}`} key={`${item.title}-${index}`}>
-            <PhotoPlaceholder label={`Galeri acara ${index + 1}`} aspect="wide" src={item.image || undefined} alt={item.title} />
-            <div className="gallery-item__caption">
-              <div><h3>{item.title}</h3><p>{item.caption}</p></div>
-              {item.reelUrl ? (
-                <a href={item.reelUrl} target="_blank" rel="noreferrer">Tonton reel <span aria-hidden="true">↗</span></a>
-              ) : (
-                <span className="gallery-item__pending">Pautan reel akan ditambah</span>
-              )}
-            </div>
-          </article>
-        ))}
-      </div>
-      <div className="highlight-reel">
-        <div className="highlight-reel__title">
-          <p className="eyebrow">Inside the celebration</p>
-          <h3>Highlight reel</h3>
+      </header>
+      <section style={{ paddingTop: 16 }}>
+        <div className="w">
+          <div className="gl">
+            {items.map((item) => {
+              const originalIndex = gallery.indexOf(item);
+              return (
+                <figure className={`gi ${layouts[originalIndex]}`} key={item.title}>
+                  <div className="fr">
+                    <div className={`im ${item.image}`} role="img" aria-label={item.title} />
+                  </div>
+                  <figcaption>{item.title}<small>{item.caption}</small></figcaption>
+                </figure>
+              );
+            })}
+          </div>
+          <div className="reel">
+            <h2>Highlight <span className="ser mk">reel</span></h2>
+            <a className="rv2" href="#hubungi">
+              <span className="pl"><ArrowRight className="i" aria-hidden="true" /></span>
+              <span>
+                <div>Tonton BTS &amp; Highlight Reel (0:45)</div>
+                <small>@senangplanner.my di Instagram &amp; TikTok</small>
+              </span>
+              <ArrowUpRight className="i" aria-hidden="true" />
+            </a>
+          </div>
         </div>
-        {playing && highlightEmbedUrl ? (
-          <iframe
-            src={highlightEmbedUrl}
-            title="SenangPlanner highlight reel"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          />
-        ) : (
-          <button
-            type="button"
-            className="highlight-reel__button"
-            onClick={() => highlightEmbedUrl && setPlaying(true)}
-            disabled={!highlightEmbedUrl}
-          >
-            <span className="highlight-reel__play" aria-hidden="true">{highlightEmbedUrl ? "▶" : "＋"}</span>
-            <span>{highlightEmbedUrl ? "Play highlight reel" : "Video akan ditambah selepas pautan disahkan"}</span>
-          </button>
-        )}
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

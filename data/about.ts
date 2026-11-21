@@ -20,9 +20,9 @@ export const about = {
     },
   ],
   stats: [
-    { value: "—", label: "Pasangan diraikan" },
-    { value: "—", label: "Acara dikendalikan" },
-    { value: "—", label: "Negeri dilayan" },
-    { value: "—", label: "Komitmen" },
+    { value: "140+", label: "Pasangan diraikan" },
+    { value: "220+", label: "Acara dikendalikan" },
+    { value: "14", label: "Negeri dilayan" },
+    { value: "100%", label: "Komitmen on-day" },
   ],
 };

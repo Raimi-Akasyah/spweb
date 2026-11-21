@@ -133,6 +133,7 @@ export function BookingWizard() {
   const proofTypeInputRef = useRef<HTMLInputElement>(null);
   const proofNameInputRef = useRef<HTMLInputElement>(null);
   const requestIdRef = useRef("");
+  const requestedDateRef = useRef<string | null>(null);
   const preparedSubmitRef = useRef(false);
   const timeoutRef = useRef<number | null>(null);
   const bookingEndpoint = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ?? "";
@@ -304,6 +305,35 @@ export function BookingWizard() {
     () => new Map(getAvailabilityForMonth(dates, month).map((item) => [item.date, item])),
     [dates, month],
   );
+  useEffect(() => {
+    const requestedDate = new URLSearchParams(window.location.search).get("date");
+    if (!requestedDate || !/^\d{4}-\d{2}-\d{2}$/.test(requestedDate)) return;
+
+    const [year, monthNumber, day] = requestedDate.split("-").map(Number);
+    const parsedDate = new Date(year, monthNumber - 1, day);
+    if (
+      parsedDate.getFullYear() !== year ||
+      parsedDate.getMonth() !== monthNumber - 1 ||
+      parsedDate.getDate() !== day ||
+      requestedDate < todayDate()
+    ) {
+      return;
+    }
+
+    requestedDateRef.current = requestedDate;
+    setMonth(requestedDate.slice(0, 7));
+  }, []);
+
+  useEffect(() => {
+    const requestedDate = requestedDateRef.current;
+    if (!requestedDate || loading || !requestedDate.startsWith(month)) return;
+
+    if (statusByDate.get(requestedDate)?.status !== "penuh") {
+      setSelectedDate(requestedDate);
+    }
+    requestedDateRef.current = null;
+  }, [loading, month, statusByDate]);
+
   const title = (() => {
     const [, monthNumber] = month.split("-").map(Number);
     const year = month.slice(0, 4);
