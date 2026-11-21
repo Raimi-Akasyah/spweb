@@ -31,8 +31,7 @@ export function SiteHeader() {
     <>
       <nav className="nav" aria-label="Navigasi utama">
         <Link className="logo" href="/#top" aria-label="SenangPlanner — halaman utama">
-          <Image src="/images/senangplanner-wordmark.png" alt="SenangPlanner" width={372} height={160} unoptimized />
-          <span>Kami Datang, Anda Senang.</span>
+          <Image src="/images/senangplanner-logo.png" alt="Senang Planners — Kami Datang, Anda Senang." width={372} height={219} unoptimized />
         </Link>
         <div className="np">
           <button

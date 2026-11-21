@@ -20,3 +20,18 @@ export const team = [
     description: "Membantu Floor Manager dalam operasi teknikal dan kelancaran majlis.",
   },
 ];
+
+export const teamProfiles = [
+  {
+    name: "Emcee Qayyum",
+    handle: "@qayyum_official",
+    url: "https://www.tiktok.com/@qayyum_official",
+    image: "/images/emcee-qayyum.jpg",
+  },
+  {
+    name: "Emcee Danial",
+    handle: "@emceemurahkl_",
+    url: "https://www.tiktok.com/@emceemurahkl_",
+    image: "/images/emcee-danial.jpg",
+  },
+];

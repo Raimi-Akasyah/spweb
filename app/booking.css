@@ -59,24 +59,17 @@
 
 .booking-page__logo {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   color: var(--booking-ink);
   text-decoration: none;
 }
 
 .booking-page__logo img {
   display: block;
-  width: 145px;
-  height: 63px;
+  width: 150px;
+  height: 88px;
   object-fit: contain;
-}
-
-.booking-page__tagline {
-  margin-top: -5px;
-  color: #806018;
-  font-size: 9px;
-  font-weight: 600;
 }
 
 .booking-page__home-link {
@@ -644,6 +637,25 @@
   font-weight: 600;
 }
 
+.booking-wizard__notice--status {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--booking-line);
+  border-radius: 12px;
+  background: var(--booking-soft);
+  color: var(--booking-ink);
+  font-size: 0.9rem;
+}
+
+.booking-wizard__whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  color: var(--booking-ink);
+  text-decoration: none;
+}
+
 .booking-wizard__honeypot,
 .booking-wizard__label.is-hidden {
   display: none;
@@ -997,6 +1009,11 @@
   .booking-page__home-link {
     padding-inline: 10px;
     font-size: 10px;
+  }
+
+  .booking-page__logo img {
+    width: 124px;
+    height: 74px;
   }
 
   .booking-wizard__card {

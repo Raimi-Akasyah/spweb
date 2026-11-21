@@ -16,10 +16,6 @@ export function ReviewsSection() {
       <div className="w">
         <h2 className="rv">Apa kata <span className="ser mk">pasangan kami.</span></h2>
         <div className="cr">
-          <div className="pt" aria-hidden="true">
-            <div className="im p-bw" />
-            <div className="im p-warm" />
-          </div>
           <div>
             <div aria-live="polite">
               {reviews.map((review, index) => (

@@ -10,6 +10,7 @@ import {
   type AvailabilityDate,
   type AvailabilityStatus,
 } from "@/lib/availability";
+import { waLink } from "@/lib/whatsapp";
 import { ImageLightbox } from "@/components/image-lightbox";
 
 const monthNames = [
@@ -130,6 +131,8 @@ export function BookingWizard() {
   const [loading, setLoading] = useState(true);
   const [bookingMessage, setBookingMessage] = useState("");
   const [bookingError, setBookingError] = useState("");
+  const [bookingNotice, setBookingNotice] = useState("");
+  const [whatsAppFallbackUrl, setWhatsAppFallbackUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [proofFileName, setProofFileName] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
@@ -407,6 +410,8 @@ export function BookingWizard() {
 
   function advanceStep() {
     setBookingError("");
+    setBookingNotice("");
+    setWhatsAppFallbackUrl("");
     setBookingMessage("");
     const form = formRef.current;
     if (!form) return false;
@@ -528,6 +533,8 @@ export function BookingWizard() {
 
     setBookingMessage("");
     setBookingError("");
+    setBookingNotice("");
+    setWhatsAppFallbackUrl("");
 
     if (preparedSubmitRef.current) {
       preparedSubmitRef.current = false;
@@ -539,18 +546,52 @@ export function BookingWizard() {
     }
 
     event.preventDefault();
-    if (!bookingEndpoint || !selectedDate) {
-      setBookingError(
-        bookingEndpoint
-          ? "Pilih tarikh majlis pada kalendar dahulu."
-          : "Borang tempahan belum disambungkan. Hubungi kami melalui WhatsApp.",
+    if (!selectedDate) {
+      setBookingError("Pilih tarikh majlis pada kalendar dahulu.");
+      return;
+    }
+
+    const form = event.currentTarget;
+    if (!bookingEndpoint) {
+      const values = new FormData(form);
+      const value = (name: string) => String(values.get(name) ?? "").trim() || "—";
+      const eventType = value("eventType") === "Lain-lain"
+        ? value("eventTypeOther")
+        : value("eventType");
+      const services = values.getAll("services").map(String).map((service) =>
+        service === "Lain-lain" ? value("serviceOther") : service,
       );
+      const proofFile = proofInputRef.current?.files?.[0];
+      const message = [
+        "*Tempahan Senang Planners*",
+        `Nama: ${value("name")}`,
+        `WhatsApp: ${value("whatsapp")}`,
+        `E-mel: ${value("email")}`,
+        `Tarikh: ${formatSelectedDate(selectedDate)}`,
+        `Jenis majlis: ${eventType}`,
+        `Masa: ${value("eventTime")}`,
+        `Pakej: ${value("packageName")}`,
+        `Jumlah tetamu: ${value("guestCount")}`,
+        `Lokasi: ${value("venue")}`,
+        `Servis: ${services.join(", ") || "—"}`,
+        `Tema: ${value("theme")}`,
+        `Bajet: ${value("budget")}`,
+        `Deposit (RM): ${value("depositAmount")}`,
+        `Baki (RM): ${value("remainingBalance")}`,
+        `Nota: ${value("notes")}`,
+        `Bukti bayaran: ${proofFile ? `${proofFile.name} (akan dilampirkan dalam chat)` : "Tiada"}`,
+      ].join("\n");
+      const fallbackUrl = waLink(message);
+      setWhatsAppFallbackUrl(fallbackUrl);
+      setBookingNotice(
+        "Sambungan Google Sheets belum diaktifkan. Semak butiran dalam WhatsApp dan tekan Hantar; lampirkan bukti bayaran dalam chat jika ada.",
+      );
+      window.open(fallbackUrl, "_blank", "noopener,noreferrer");
       return;
     }
 
     setSubmitting(true);
 
-    const form = event.currentTarget;
     const selectedServices = form.querySelectorAll<HTMLInputElement>('input[name="services"]:checked');
     if (selectedServices.length === 0) {
       setSubmitting(false);
@@ -651,6 +692,8 @@ export function BookingWizard() {
     formRef.current?.reset();
     setBookingMessage("");
     setBookingError("");
+    setBookingNotice("");
+    setWhatsAppFallbackUrl("");
     setSelectedDate("");
     setTicketDetails(emptyTicketDetails);
     setProofFileName("");
@@ -667,9 +710,8 @@ export function BookingWizard() {
     <main className="booking-page">
       <div className="booking-page__wrap">
         <header className="booking-page__header">
-          <Link className="booking-page__logo" href="/">
-            <Image src="/images/senangplanner-wordmark.png" alt="SenangPlanner" width={372} height={160} unoptimized />
-            <span className="booking-page__tagline">Kami Datang, Anda Senang.</span>
+          <Link className="booking-page__logo" href="/" aria-label="Senang Planners — Kami Datang, Anda Senang.">
+            <Image src="/images/senangplanner-logo.png" alt="Senang Planners — Kami Datang, Anda Senang." width={372} height={219} unoptimized />
           </Link>
           <Link className="booking-page__home-link" href="/">← Laman utama</Link>
         </header>
@@ -723,10 +765,14 @@ export function BookingWizard() {
                 noValidate
                 onInput={() => {
                   setBookingError("");
+                  setBookingNotice("");
+                  setWhatsAppFallbackUrl("");
                   updateTicketDetails();
                 }}
                 onChange={() => {
                   setBookingError("");
+                  setBookingNotice("");
+                  setWhatsAppFallbackUrl("");
                   updateTicketDetails();
                 }}
                 onSubmit={submitBooking}
@@ -994,6 +1040,17 @@ export function BookingWizard() {
                 </section>
 
                 {bookingError && <p className="booking-wizard__error" role="alert">{bookingError}</p>}
+                {bookingNotice && <p className="booking-wizard__notice booking-wizard__notice--status" role="status">{bookingNotice}</p>}
+                {whatsAppFallbackUrl && (
+                  <a
+                    className="booking-wizard__button booking-wizard__whatsapp-link"
+                    href={whatsAppFallbackUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Teruskan melalui WhatsApp
+                  </a>
+                )}
                 {process.env.NODE_ENV === "development" && (
                   <div className="booking-wizard__demo">
                     <button type="button" onClick={fillDemoData}>Isi contoh (demo)</button>
@@ -1057,9 +1114,9 @@ export function BookingWizard() {
                   className="booking-wizard__button"
                   type="submit"
                   form="booking-form"
-                  disabled={!bookingEndpoint || submitting}
+                  disabled={submitting}
                 >
-                  {submitting ? "Sedang hantar..." : bookingEndpoint ? "Confirm & Tempah" : "Tempahan belum disambungkan"}
+                  {submitting ? "Sedang hantar..." : bookingEndpoint ? "Confirm & Tempah" : "Hantar melalui WhatsApp"}
                 </button>
               )}
             </div>

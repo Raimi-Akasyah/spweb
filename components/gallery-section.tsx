@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { gallery } from "@/data/gallery";
 
@@ -8,7 +9,7 @@ const filters = [
   { key: "pakej", label: "Pakej" },
   { key: "pasukan", label: "Pasukan & Visi" },
 ];
-const layouts = ["ga", "gb", "gc", "gd", "ge", "gf2", "gf2"];
+const layouts = ["ga", "gb", "gc", "gd"];
 
 export function GallerySection() {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -47,9 +48,23 @@ export function GallerySection() {
               return (
                 <figure className={`gi ${layouts[originalIndex]}`} key={item.title}>
                   <div className="fr">
-                    <div className={`im ${item.image}`} role="img" aria-label={item.title} />
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      width={1080}
+                      height={1080}
+                      sizes="(max-width: 700px) 100vw, 33vw"
+                    />
                   </div>
-                  <figcaption>{item.title}<small>{item.caption}</small></figcaption>
+                  <figcaption>
+                    {item.title}
+                    <small>{item.caption}</small>
+                    {item.reelUrl && (
+                      <a href={item.reelUrl} target="_blank" rel="noopener noreferrer">
+                        Lihat profil
+                      </a>
+                    )}
+                  </figcaption>
                 </figure>
               );
             })}

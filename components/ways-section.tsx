@@ -55,8 +55,10 @@ export function WaysSection() {
                     Tanya pasal ni <ArrowUpRight className="i" aria-hidden="true" />
                   </WhatsAppButton>
                 </div>
-                <div className="fr sa">
-                  <div className={`im ${service.image}`} role="img" aria-label={`Contoh ${service.title}`} />
+                <div className="service-stamp" aria-hidden="true">
+                  <span>Senang Planners · {service.number}</span>
+                  <strong>{service.number}</strong>
+                  <span>{["Planning", "On-Day Crew", "Audio"][index]}</span>
                 </div>
               </article>
             ))}

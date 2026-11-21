@@ -1,4 +1,4 @@
-import { team } from "@/data/team";
+import { team, teamProfiles } from "@/data/team";
 import { about } from "@/data/about";
 import { ImageLightbox } from "@/components/image-lightbox";
 import { WhatsAppButton } from "@/components/whatsapp-button";
@@ -8,7 +8,7 @@ export function TeamSection() {
     <section className="team-section">
       <div className="w">
         <h2>Siapa dalam <span className="ser mk">pasukan kami?</span></h2>
-        <p className="team-intro">Pasukan profesional yang bekerjasama memastikan majlis anda berjalan lancar dari awal hingga akhir.</p>
+        <p className="team-intro">Event Coordinator, Event Planner, Emcee dan PA System — satu pasukan untuk merancang serta mengurus majlis anda.</p>
         <div className="tm">
           {team.map((member, index) => (
             <article className="mb" key={member.role}>
@@ -18,6 +18,17 @@ export function TeamSection() {
                 <p className="bio">{member.description}</p>
               </div>
             </article>
+          ))}
+        </div>
+        <div className="team-profiles" aria-label="Profil emcee dari Linktree Senang Planners">
+          {teamProfiles.map((profile) => (
+            <a className="team-profile" href={profile.url} key={profile.name} target="_blank" rel="noopener noreferrer">
+              <div>
+                <h3>{profile.name}</h3>
+                <span>TikTok {profile.handle}</span>
+              </div>
+              <span aria-hidden="true">↗</span>
+            </a>
           ))}
         </div>
         <div className="team-after">

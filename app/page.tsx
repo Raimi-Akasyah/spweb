@@ -1,4 +1,3 @@
-import { AboutSection } from "@/components/about-section";
 import { ClosingSection } from "@/components/closing-section";
 import { Footer } from "@/components/footer";
 import { DateSection, Hero } from "@/components/hero";
@@ -19,7 +18,6 @@ export default function Home() {
           <div><span>Plan the Senang</span><span className="o">Good venues</span><span>Good vendors</span><span className="o">Good vibes</span><span>Plan the Senang</span><span className="o">Good venues</span><span>Good vendors</span><span className="o">Good vibes</span></div>
         </div>
         <DateSection />
-        <AboutSection />
         <WaysSection />
         <ReviewsSection />
         <ClosingSection />

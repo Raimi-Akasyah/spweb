@@ -5,27 +5,27 @@ Editorial wedding and event planning website built with Next.js 15, TypeScript, 
 ## Run locally
 
 1. Copy `.env.example` to `.env.local`.
-2. Set `NEXT_PUBLIC_WA_NUMBER` to the WhatsApp number in international format without `+`.
-3. Optionally set `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_WA_NUMBER`, and `NEXT_PUBLIC_APPS_SCRIPT_URL`.
+2. The public WhatsApp number from the Senang Planners Linktree is the default; override `NEXT_PUBLIC_WA_NUMBER` if needed.
+3. Optionally set `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_APPS_SCRIPT_URL`.
 4. Run `npm install`, then `npm run dev`.
 
 ## Editable content
 
 Content is kept in `data/*.ts`:
 
-- `site.ts`: region and real social/review links.
+- `site.ts`: region, Linktree, booking and verified social links.
 - `about.ts`: company introduction, vision, mission, objectives and benefits.
 - `services.ts`, `packages.ts`: service details and WhatsApp enquiry text.
 - `reviews.ts`, `team.ts`, `gallery.ts`: reviews, team roles and the supplied company/package images.
 - `availability.ts`: fallback availability data and calendar note.
 
-The hero, team, vision/mission and package areas use images supplied for Senang Planners. Gallery captions are limited to the package and company information currently provided; add approved event photos when available.
+The hero, team, vision/mission and package areas use images supplied for Senang Planners. Linktree profile photos are shown with their linked emcee profiles. Gallery captions are limited to the package and company information currently provided; add approved event photos when available.
 
 ## Booking storage and calendar
 
-The homepage's **Book Event** and **Pick your date** buttons open the five-step event-pass wizard at `/booking/`; the booking flow is a separate page, not an inline homepage form. It collects contact details, date and time, venue, event type, requested services, guest count, theme and budget, deposit and balance amounts, optional payment-proof image, and consent to the terms. Submissions are stored as rows in the Google Sheet through the Apps Script web app in `apps-script/Code.gs`. The script confirms a date immediately, rejects a competing booking for the same date, and returns confirmed dates to the calendar. New columns are appended automatically when the script next accesses an existing bookings sheet.
+The homepage's **Book Event** and **Pick your date** buttons open the five-step event-pass wizard at `/booking/`; the booking flow is a separate page, not an inline homepage form. It collects contact details, date and time, venue, event type, requested services, guest count, theme and budget, deposit and balance amounts, optional payment-proof image, and consent to the terms. When `NEXT_PUBLIC_APPS_SCRIPT_URL` is configured, submissions are stored as rows in the Google Sheet through the Apps Script web app in `apps-script/Code.gs`. The script confirms a date immediately, rejects a competing booking for the same date, and returns confirmed dates to the calendar. New columns are appended automatically when the script next accesses an existing bookings sheet.
 
-In local development, use **Isi contoh (demo)** to preview the form with sample details. This only fills the browser form; it does not submit or attach a payment image. Keep the Apps Script URL unset while reviewing the draft.
+Without that URL, the submit button opens a WhatsApp message pre-filled with the booking details. The customer must review and send the message; any payment-proof image must be attached manually. This fallback does not write to Google Sheets or reserve dates. In local development, **Isi contoh (demo)** only fills the browser form; it does not submit or attach a payment image.
 
 The booking backend targets spreadsheet `1fBxefY_vrzAwi8JYqa_kwp3-PjppFrwJUe87PmElYVw`. The Apps Script project URL in a browser is an editor link, not the web-app endpoint needed by the site.
 
@@ -46,7 +46,7 @@ The `main` branch deploys through `.github/workflows/deploy.yml` to `https://rai
 
 ## Before launch
 
-- Replace all sample copy and contact details.
-- Add the real Google Maps review URL and social links.
+- Verify testimonial copy and payment terms before launch.
+- Add the real Google Maps review URL; social and WhatsApp links are sourced from Linktree.
 - Confirm photo, review and reel permissions.
-- Set the production site URL and Google Sheet URL.
+- Set the production site URL and deploy/configure the Apps Script `/exec` URL.

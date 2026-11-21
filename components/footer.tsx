@@ -13,11 +13,20 @@ export function Footer() {
         </h2>
         <div className="ct">
           <div>WhatsApp
-            <b><WhatsAppButton variant="text" message="Hi SenangPlanner, saya ingin berbincang tentang majlis saya.">Chat dengan kami</WhatsAppButton></b>
+            <b><WhatsAppButton variant="text" message="Hi SenangPlanner, saya ingin berbincang tentang majlis saya.">{site.whatsappDisplay} · Chat</WhatsAppButton></b>
           </div>
-          <div>IG &amp; TikTok<b>@senangplanner.my</b></div>
-          <div>Lokasi<b>{site.location}</b></div>
-          <div>Waktu<b>{site.hours}</b></div>
+          <div>Instagram
+            <b><a href={site.instagramUrl} target="_blank" rel="noopener noreferrer">@senangplanners.my</a></b>
+          </div>
+          <div>TikTok
+            <b><a href={site.tiktokUrl} target="_blank" rel="noopener noreferrer">@senangplanners.my</a></b>
+          </div>
+          <div>Tempah tarikh
+            <b><a href={site.bookingWhatsappUrl} target="_blank" rel="noopener noreferrer">BOOK YOUR DATE!</a></b>
+          </div>
+          <div>Semua pautan
+            <b><a href={site.linktreeUrl} target="_blank" rel="noopener noreferrer">Senangplanners.my · Linktree</a></b>
+          </div>
         </div>
         <div className="acts" style={{ justifyContent: "center", marginTop: 44 }}>
           <Link className="btn gd" href="/booking">
