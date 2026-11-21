@@ -285,21 +285,37 @@
   content: "";
 }
 
-.booking-wizard__day.is-full,
 .booking-wizard__day:disabled {
   cursor: not-allowed;
-  background: var(--booking-soft);
-  text-decoration: line-through;
 }
 
-.booking-wizard__day:disabled {
-  opacity: 0.42;
+.booking-wizard__day.is-unknown {
+  border-color: #d1d5db;
+  background: #f3f4f6;
+  color: #777f89;
+  cursor: progress;
 }
 
 .booking-wizard__day.is-selected {
   border-color: var(--booking-ink);
   background: var(--booking-ink);
   color: var(--booking-gold-light);
+}
+
+.booking-wizard__day.is-full {
+  border-color: #b91c1c;
+  background: #dc2626;
+  color: #fff;
+  opacity: 1;
+  text-decoration: none;
+}
+
+.booking-wizard__day.is-past {
+  border-color: #d1d5db;
+  background: #e5e7eb;
+  color: #747b84;
+  opacity: 1;
+  text-decoration: none;
 }
 
 .booking-wizard__day.is-selected::after {
@@ -334,8 +350,13 @@
 }
 
 .booking-wizard__legend i.is-full {
-  border-color: var(--booking-line);
-  background: var(--booking-line);
+  border-color: #b91c1c;
+  background: #dc2626;
+}
+
+.booking-wizard__legend i.is-past {
+  border-color: #9ca3af;
+  background: #d1d5db;
 }
 
 .booking-wizard__field-group {

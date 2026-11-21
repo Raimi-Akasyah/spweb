@@ -53,19 +53,43 @@ function doGet(event) {
       throw new Error("Provide month in YYYY-MM format.");
     }
 
+    const cacheKey = `availability:${month}`;
+    let cache = null;
+    try {
+      cache = CacheService.getScriptCache();
+      const cachedEntries = cache.get(cacheKey);
+      if (cachedEntries) {
+        try {
+          return jsonp_(callback, { ok: true, entries: JSON.parse(cachedEntries) });
+        } catch (cacheError) {
+          console.error(cacheError);
+          cache.remove(cacheKey);
+        }
+      }
+    } catch (cacheError) {
+      console.error(cacheError);
+    }
+
     const sheet = getBookingsSheet_();
     const lastRow = sheet.getLastRow();
     const rows = lastRow < 2
       ? []
-      : sheet.getRange(2, 1, lastRow - 1, HEADERS.length).getValues();
+      : sheet.getRange(2, 5, lastRow - 1, 6).getValues();
     const entries = rows.flatMap((row) => {
-      const eventDate = normalizeDate_(row[4]);
-      if (!eventDate || !eventDate.startsWith(month + "-") || row[9] !== "confirmed") {
+      const eventDate = normalizeDate_(row[0]);
+      if (!eventDate || !eventDate.startsWith(month + "-") || row[5] !== "confirmed") {
         return [];
       }
       return [{ date: eventDate, status: "penuh" }];
     });
 
+    if (cache) {
+      try {
+        cache.put(cacheKey, JSON.stringify(entries), 300);
+      } catch (cacheError) {
+        console.error(cacheError);
+      }
+    }
     return jsonp_(callback, { ok: true, entries: entries });
   } catch (error) {
     console.error(error);
@@ -137,6 +161,12 @@ function doPost(event) {
         throw error;
       }
 
+      try {
+        cacheConfirmedBooking_(booking.eventDate);
+      } catch (cacheError) {
+        console.error(cacheError);
+      }
+
       return bookingResult_(requestId, {
         ok: true,
         bookingId: bookingId,
@@ -154,6 +184,20 @@ function doPost(event) {
       message: error.message || "Tempahan tidak berjaya. Sila cuba lagi.",
     });
   }
+}
+
+function cacheConfirmedBooking_(eventDate) {
+  const month = eventDate.slice(0, 7);
+  const cache = CacheService.getScriptCache();
+  const cacheKey = `availability:${month}`;
+  const cachedEntries = cache.get(cacheKey);
+  if (!cachedEntries) return;
+
+  const entries = JSON.parse(cachedEntries);
+  if (!entries.some((entry) => entry.date === eventDate)) {
+    entries.push({ date: eventDate, status: "penuh" });
+  }
+  cache.put(cacheKey, JSON.stringify(entries), 300);
 }
 
 function validateBooking_(parameters, parameterLists) {

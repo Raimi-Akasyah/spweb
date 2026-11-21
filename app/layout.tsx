@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, Instrument_Serif, Outfit, Sora } from "next/font/google";
+import { preconnect } from "react-dom";
 import "./globals.css";
 import "./gen-z.css";
 import "./cinema-design.css";
@@ -53,6 +54,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  preconnect("https://script.google.com");
+  preconnect("https://script.googleusercontent.com");
+
   return (
     <html lang="ms">
       <body className={`${sora.variable} ${hanken.variable} ${instrumentSerif.variable} ${outfit.variable}`}>

@@ -1,9 +1,13 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { availabilityFallback } from "@/data/availability";
+import {
+  fetchAvailabilityMonth,
+  readCachedAvailability,
+} from "@/lib/availability-client";
 import { publicAssetPath } from "@/lib/public-asset";
 import {
   getAvailabilityForMonth,
@@ -31,12 +35,6 @@ const serviceOptions = [
 const packageOptions = [
   "Senang Wedding Package 2027",
 ];
-
-type AvailabilityPayload = {
-  ok: boolean;
-  entries?: AvailabilityDate[];
-  error?: string;
-};
 
 type TicketDetails = {
   name: string;
@@ -72,12 +70,6 @@ type BookingMessage = {
     message: string;
   };
 };
-
-declare global {
-  interface Window {
-    senangCallback_senangPlannerAvailability?: (payload: AvailabilityPayload) => void;
-  }
-}
 
 function todayDate() {
   const now = new Date();
@@ -124,6 +116,7 @@ export function BookingWizard() {
   const [month, setMonth] = useState(currentMonth);
   const [dates, setDates] = useState<AvailabilityDate[]>([]);
   const [source, setSource] = useState<"sheet" | "fallback">("fallback");
+  const [loadedMonth, setLoadedMonth] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [step, setStep] = useState(1);
   const [ticketDetails, setTicketDetails] = useState<TicketDetails>(emptyTicketDetails);
@@ -133,7 +126,6 @@ export function BookingWizard() {
   const [bookingError, setBookingError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [proofFileName, setProofFileName] = useState("");
-  const [refreshKey, setRefreshKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
   const requestIdInputRef = useRef<HTMLInputElement>(null);
@@ -163,6 +155,20 @@ export function BookingWizard() {
   );
   const ticketBars = useMemo(() => createTicketBars(ticketSeed), [ticketSeed]);
   const ticketCode = `SP-${String((ticketSeed % 900000) + 100000)}`;
+  const refreshAvailability = useCallback(() => (
+    fetchAvailabilityMonth(bookingEndpoint, month, true)
+      .then((entries) => {
+        setDates(entries);
+        setSource("sheet");
+        setLoadedMonth(month);
+        setError("");
+      })
+      .catch((cause: unknown) => {
+        const message = cause instanceof Error ? cause.message : "Could not refresh availability.";
+        setError(message);
+        console.warn("Could not refresh availability after a booking update.", cause);
+      })
+  ), [bookingEndpoint, month]);
 
   function updateTicketDetails() {
     const form = formRef.current;
@@ -183,35 +189,43 @@ export function BookingWizard() {
 
   useEffect(() => {
     const controller = new AbortController();
-    let script: HTMLScriptElement | undefined;
-    setLoading(true);
+    let active = true;
     setError("");
 
     if (bookingEndpoint) {
-      const callbackName = "senangCallback_senangPlannerAvailability";
-      window[callbackName] = (payload) => {
-        if (!payload.ok || !payload.entries) {
-          setError(payload.error || "Could not load availability.");
-          return;
-        }
-        setDates(payload.entries);
+      const cached = readCachedAvailability(bookingEndpoint, month);
+      if (cached) {
+        setDates(cached.entries);
         setSource("sheet");
-      };
-      script = document.createElement("script");
-      script.async = true;
-      script.onerror = () => setError("Availability is temporarily unavailable. Please try again.");
-      const url = new URL(bookingEndpoint);
-      url.searchParams.set("action", "availability");
-      url.searchParams.set("month", month);
-      url.searchParams.set("callback", callbackName);
-      script.src = url.toString();
-      document.body.appendChild(script);
-      script.onload = () => setLoading(false);
+        setLoadedMonth(month);
+      } else {
+        setLoadedMonth(null);
+      }
+      setLoading(!cached?.isFresh);
+
+      fetchAvailabilityMonth(bookingEndpoint, month)
+        .then((entries) => {
+          if (!active) return;
+          setDates(entries);
+          setSource("sheet");
+          setLoadedMonth(month);
+          setError("");
+        })
+        .catch((cause: unknown) => {
+          if (!active) return;
+          setError(cause instanceof Error ? cause.message : "Could not load availability.");
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+
+      void fetchAvailabilityMonth(bookingEndpoint, shiftMonth(month, 1)).catch((cause: unknown) => {
+        console.warn("Could not prefetch next month's availability.", cause);
+      });
 
       return () => {
+        active = false;
         controller.abort();
-        script?.remove();
-        delete window[callbackName];
       };
     }
 
@@ -219,10 +233,15 @@ export function BookingWizard() {
     if (!csvUrl) {
       setDates((entries) => entries.length ? entries : availabilityFallback);
       setSource("fallback");
+      setLoadedMonth(null);
       setLoading(false);
-      return;
+      return () => {
+        active = false;
+        controller.abort();
+      };
     }
 
+    setLoading(true);
     fetch(csvUrl, { signal: controller.signal, cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) {
@@ -231,17 +250,24 @@ export function BookingWizard() {
         return parseAvailabilityCsv(await response.text());
       })
       .then((entries) => {
+        if (!active) return;
         setDates(entries);
         setSource("sheet");
+        setLoadedMonth(month);
       })
       .catch((cause: unknown) => {
-        if (cause instanceof DOMException && cause.name === "AbortError") return;
+        if (!active || (cause instanceof DOMException && cause.name === "AbortError")) return;
         setError(cause instanceof Error ? cause.message : "Could not load availability.");
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (active) setLoading(false);
+      });
 
-    return () => controller.abort();
-  }, [bookingEndpoint, month, refreshKey]);
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [bookingEndpoint, month]);
 
   useEffect(() => {
     setSelectedDate("");
@@ -285,7 +311,7 @@ export function BookingWizard() {
 
       if (!result.ok) {
         setBookingError(result.message);
-        if (result.code === "date-taken") setRefreshKey((value) => value + 1);
+        if (result.code === "date-taken") void refreshAvailability();
         return;
       }
 
@@ -296,6 +322,7 @@ export function BookingWizard() {
           ...current.filter((entry) => entry.date !== result.eventDate),
           { date: result.eventDate as string, status: "penuh" },
         ]);
+        void refreshAvailability();
       }
     };
 
@@ -305,7 +332,7 @@ export function BookingWizard() {
       if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
       if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
     };
-  }, []);
+  }, [refreshAvailability]);
 
   const cells = useMemo(() => {
     const [year, monthNumber] = month.split("-").map(Number);
@@ -321,6 +348,7 @@ export function BookingWizard() {
     () => new Map(getAvailabilityForMonth(dates, month).map((item) => [item.date, item])),
     [dates, month],
   );
+  const hasAvailability = loadedMonth === month;
   useEffect(() => {
     if (
       !preparedSubmitRef.current ||
@@ -362,13 +390,13 @@ export function BookingWizard() {
 
   useEffect(() => {
     const requestedDate = requestedDateRef.current;
-    if (!requestedDate || loading || !requestedDate.startsWith(month)) return;
+    if (!requestedDate || loadedMonth !== month || !requestedDate.startsWith(month)) return;
 
     if (statusByDate.get(requestedDate)?.status !== "penuh") {
       setSelectedDate(requestedDate);
     }
     requestedDateRef.current = null;
-  }, [loading, month, statusByDate]);
+  }, [loadedMonth, month, statusByDate]);
 
   const title = (() => {
     const [, monthNumber] = month.split("-").map(Number);
@@ -618,7 +646,7 @@ export function BookingWizard() {
       preparedSubmitRef.current = true;
       if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
       submissionPollRef.current = window.setInterval(() => {
-        setRefreshKey((value) => value + 1);
+        void refreshAvailability();
       }, 1000);
 
       if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
@@ -827,12 +855,14 @@ export function BookingWizard() {
                             "booking-wizard__day",
                             status === "hampir-penuh" ? "is-few" : "",
                             isFull ? "is-full" : "",
+                            isPast ? "is-past" : "",
+                            !hasAvailability ? "is-unknown" : "",
                             selectedDate === date ? "is-selected" : "",
                           ].filter(Boolean).join(" ")}
                           type="button"
                           key={date}
-                          disabled={isFull || isPast || loading || Boolean(error)}
-                          aria-label={`${day} ${title}${entry?.note ? `: ${entry.note}` : ""}${isFull ? ", penuh" : ""}`}
+                          disabled={isFull || isPast || !hasAvailability}
+                          aria-label={`${day} ${title}${isPast ? ", tarikh lepas" : isFull ? ", sudah ditempah" : !hasAvailability ? ", status sedang dimuatkan" : entry?.note ? `: ${entry.note}` : ""}`}
                           aria-pressed={selectedDate === date}
                           onClick={() => {
                             setSelectedDate(date);
@@ -847,15 +877,18 @@ export function BookingWizard() {
                   <div className="booking-wizard__legend">
                     <span><i /> Kosong</span>
                     <span><i className="is-few" /> Hampir penuh</span>
-                    <span><i className="is-full" /> Penuh</span>
+                    <span><i className="is-full" /> Ditempah</span>
+                    <span><i className="is-past" /> Tarikh lepas</span>
                   </div>
                   <p className="booking-wizard__sub booking-wizard__notice">
                     {loading
-                      ? "Memuatkan tarikh…"
+                      ? hasAvailability
+                        ? "Kalendar pantas dimuatkan; sedang mengesahkan status terkini…"
+                        : "Memuatkan tarikh…"
                       : error
                         ? error
                         : source === "sheet"
-                          ? "Live availability · slot yang ditempah ditandakan penuh."
+                          ? "Live availability · tarikh ditempah ditandakan merah."
                             : "Kalendar demo. Slot sebenar disahkan oleh pasukan kami."}
                   </p>
                   {error && <p className="booking-wizard__error" role="alert">{error}</p>}
@@ -1130,7 +1163,7 @@ export function BookingWizard() {
         title="Booking response"
         onLoad={() => {
           if (!preparedSubmitRef.current || !selectedDate) return;
-          setRefreshKey((value) => value + 1);
+          void refreshAvailability();
         }}
       />
     </main>

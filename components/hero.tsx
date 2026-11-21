@@ -7,6 +7,10 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { availabilityFallback } from "@/data/availability";
 import { publicAssetPath } from "@/lib/public-asset";
 import {
+  fetchAvailabilityMonth,
+  readCachedAvailability,
+} from "@/lib/availability-client";
+import {
   getAvailabilityForMonth,
   parseAvailabilityCsv,
   type AvailabilityDate,
@@ -19,18 +23,6 @@ const monthNames = [
   "Julai", "Ogos", "September", "Oktober", "November", "Disember",
 ];
 const weekDays = ["Isn", "Sel", "Rab", "Kha", "Jum", "Sab", "Aha"];
-
-type AvailabilityPayload = {
-  ok: boolean;
-  entries?: AvailabilityDate[];
-  error?: string;
-};
-
-declare global {
-  interface Window {
-    senangCallback_homeAvailability?: (payload: AvailabilityPayload) => void;
-  }
-}
 
 function currentMonth() {
   const now = new Date();
@@ -51,6 +43,7 @@ function shiftMonth(month: string, delta: number) {
 function DateSection() {
   const [month, setMonth] = useState(currentMonth);
   const [dates, setDates] = useState<AvailabilityDate[]>(availabilityFallback);
+  const [loadedMonth, setLoadedMonth] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -60,76 +53,80 @@ function DateSection() {
 
   useEffect(() => {
     const controller = new AbortController();
-    let script: HTMLScriptElement | undefined;
-    setLoading(true);
+    let active = true;
     setError("");
 
     if (bookingEndpoint) {
-      const callbackName = "senangCallback_homeAvailability";
-      let receivedResponse = false;
-      window[callbackName] = (payload) => {
-        receivedResponse = true;
-        if (!payload.ok || !Array.isArray(payload.entries)) {
-          setError(payload.error || "Ketersediaan tarikh tidak dapat dimuatkan.");
-          setDates([]);
-          setLoading(false);
-          return;
-        }
-        setDates(payload.entries);
-        setLoading(false);
-      };
-
-      try {
-        const url = new URL(bookingEndpoint);
-        url.searchParams.set("action", "availability");
-        url.searchParams.set("month", month);
-        url.searchParams.set("callback", callbackName);
-        script = document.createElement("script");
-        script.async = true;
-        script.src = url.toString();
-        script.onerror = () => {
-          setError("Ketersediaan tidak dapat dimuatkan. Sahkan semula melalui borang tempahan.");
-          setLoading(false);
-        };
-        script.onload = () => {
-          if (!receivedResponse) {
-            setError("Respons ketersediaan tidak lengkap. Sahkan semula melalui borang tempahan.");
-          }
-          setLoading(false);
-        };
-        document.body.appendChild(script);
-      } catch {
-        setError("Pautan ketersediaan tidak sah. Sahkan tarikh melalui borang tempahan.");
-        setLoading(false);
+      const cached = readCachedAvailability(bookingEndpoint, month);
+      if (cached) {
+        setDates(cached.entries);
+        setLoadedMonth(month);
+      } else {
+        setLoadedMonth(null);
       }
+      setLoading(!cached?.isFresh);
+
+      fetchAvailabilityMonth(bookingEndpoint, month)
+        .then((entries) => {
+          if (!active) return;
+          setDates(entries);
+          setLoadedMonth(month);
+          setError("");
+        })
+        .catch((cause: unknown) => {
+          if (!active) return;
+          setError(cause instanceof Error
+            ? cause.message
+            : "Ketersediaan tarikh tidak dapat dimuatkan.");
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+
+      void fetchAvailabilityMonth(bookingEndpoint, shiftMonth(month, 1)).catch((cause: unknown) => {
+        console.warn("Could not prefetch next month's availability.", cause);
+      });
 
       return () => {
+        active = false;
         controller.abort();
-        script?.remove();
-        delete window[callbackName];
       };
     }
 
     const csvUrl = process.env.NEXT_PUBLIC_AVAILABILITY_CSV_URL;
     if (!csvUrl) {
       setDates(availabilityFallback);
+      setLoadedMonth(null);
       setLoading(false);
-      return () => controller.abort();
+      return () => {
+        active = false;
+        controller.abort();
+      };
     }
 
+    setLoading(true);
     fetch(csvUrl, { signal: controller.signal, cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) throw new Error(`Availability sheet returned ${response.status}.`);
         return parseAvailabilityCsv(await response.text());
       })
-      .then(setDates)
+      .then((entries) => {
+        if (!active) return;
+        setDates(entries);
+        setLoadedMonth(month);
+      })
       .catch((cause: unknown) => {
-        if (cause instanceof DOMException && cause.name === "AbortError") return;
+        if (!active || (cause instanceof DOMException && cause.name === "AbortError")) return;
         setError(cause instanceof Error ? cause.message : "Ketersediaan tarikh tidak dapat dimuatkan.");
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (active) setLoading(false);
+      });
 
-    return () => controller.abort();
+    return () => {
+      active = false;
+      controller.abort();
+    };
   }, [bookingEndpoint, month]);
 
   const days = useMemo(() => {
@@ -146,6 +143,7 @@ function DateSection() {
     () => new Map(getAvailabilityForMonth(dates, month).map((entry) => [entry.date, entry])),
     [dates, month],
   );
+  const hasAvailability = loadedMonth === month;
   const [year, monthNumber] = month.split("-").map(Number);
   const monthTitle = `${monthNames[monthNumber - 1]} ${year}`;
   const selectedStatus = selectedDate ? statusByDate.get(selectedDate)?.status : undefined;
@@ -198,6 +196,8 @@ function DateSection() {
                   "dy",
                   status === "hampir-penuh" ? "few" : "",
                   isFull ? "full" : "",
+                  isPast ? "past" : "",
+                  !hasAvailability ? "unknown" : "",
                   selectedDate === date ? "sel" : "",
                 ].filter(Boolean).join(" ");
                 return (
@@ -206,8 +206,8 @@ function DateSection() {
                     type="button"
                     key={date}
                     onClick={() => setSelectedDate(date)}
-                    disabled={isPast || isFull}
-                    aria-label={`${day} ${monthNames[monthNumber - 1]} ${year}${status ? `, ${statusLabel(status)}` : ""}`}
+                    disabled={isPast || isFull || !hasAvailability}
+                    aria-label={`${day} ${monthNames[monthNumber - 1]} ${year}${isPast ? ", tarikh lepas" : isFull ? ", sudah ditempah" : status ? `, ${statusLabel(status)}` : ""}`}
                     aria-pressed={selectedDate === date}
                   >
                     {day}
@@ -218,7 +218,8 @@ function DateSection() {
             <div className="lg" aria-label="Petunjuk ketersediaan">
               <span><i />Kosong</span>
               <span><i className="few" />Hampir penuh</span>
-              <span><i className="full" />Penuh</span>
+              <span><i className="full" />Ditempah</span>
+              <span><i className="past" />Tarikh lepas</span>
             </div>
             <p className="sel-status" aria-live="polite">
               {error
