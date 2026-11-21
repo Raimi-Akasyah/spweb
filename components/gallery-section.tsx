@@ -1,51 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
 import { gallery } from "@/data/gallery";
 import { publicAssetPath } from "@/lib/public-asset";
 
-const filters = [
-  { key: "all", label: `Semua (${gallery.length})` },
-  { key: "acara", label: "Acara" },
-  { key: "pakej", label: "Pakej" },
-  { key: "pasukan", label: "Pasukan" },
-];
 const layouts = ["ga", "gb", "gc", "gd"];
 
 export function GallerySection() {
-  const [activeFilter, setActiveFilter] = useState("all");
-  const items = useMemo(
-    () => gallery.filter((item) => activeFilter === "all" || item.category === activeFilter),
-    [activeFilter],
-  );
-
   return (
     <>
       <header className="ph">
         <div className="w">
-          <div className="pill">Senang Planners · Galeri</div>
-          <h1>Kenali <span className="ser mk">kami.</span></h1>
-          <p className="sub">Lihat pakej, pasukan dan hala tuju Senang Planners.</p>
-          <div className="gf" role="group" aria-label="Tapis kategori galeri">
-            {filters.map((filter) => (
-              <button
-                type="button"
-                className={activeFilter === filter.key ? "on" : ""}
-                key={filter.key}
-                onClick={() => setActiveFilter(filter.key)}
-                aria-pressed={activeFilter === filter.key}
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
+          <div className="pill">Senang Planners · Galeri acara</div>
+          <h1>Momen <span className="ser mk">majlis.</span></h1>
+          <p className="sub">Foto sebenar daripada majlis yang pernah diuruskan Senang Planners.</p>
         </div>
       </header>
       <section style={{ paddingTop: 16 }}>
         <div className="w">
           <div className="gl">
-            {items.map((item) => {
+            {gallery.map((item) => {
               const originalIndex = gallery.indexOf(item);
               return (
                 <figure className={`gi ${layouts[originalIndex % layouts.length]}`} key={item.title}>
