@@ -278,6 +278,7 @@ export function BookingWizard() {
       if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
       setSubmitting(false);
+      preparedSubmitRef.current = false;
 
       if (!result.ok) {
         setBookingError(result.message);
@@ -316,6 +317,24 @@ export function BookingWizard() {
     () => new Map(getAvailabilityForMonth(dates, month).map((item) => [item.date, item])),
     [dates, month],
   );
+  useEffect(() => {
+    if (
+      !preparedSubmitRef.current ||
+      !selectedDate ||
+      statusByDate.get(selectedDate)?.status !== "penuh"
+    ) {
+      return;
+    }
+
+    preparedSubmitRef.current = false;
+    if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
+    timeoutRef.current = null;
+    setSubmitting(false);
+    setBookingError("");
+    setBookingMessage(
+      "Tempahan telah disimpan dalam Google Sheets dan tarikh telah dikemas kini dalam kalendar laman web.",
+    );
+  }, [selectedDate, statusByDate]);
   useEffect(() => {
     const requestedDate = new URLSearchParams(window.location.search).get("date");
     if (!requestedDate || !/^\d{4}-\d{2}-\d{2}$/.test(requestedDate)) return;
@@ -534,6 +553,7 @@ export function BookingWizard() {
     if (preparedSubmitRef.current) {
       preparedSubmitRef.current = false;
       timeoutRef.current = window.setTimeout(() => {
+        preparedSubmitRef.current = false;
         setSubmitting(false);
         setBookingError("Tempahan mengambil masa terlalu lama. Sila cuba lagi; jika terus berlaku, jangan tambah tempahan yang sama.");
       }, 30000);
@@ -1079,6 +1099,10 @@ export function BookingWizard() {
         className="booking-wizard__response"
         name="booking-result-frame"
         title="Booking response"
+        onLoad={() => {
+          if (!preparedSubmitRef.current || !selectedDate) return;
+          setRefreshKey((value) => value + 1);
+        }}
       />
     </main>
   );
