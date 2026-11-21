@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
+import { publicAssetPath } from "@/lib/public-asset";
 
 const menuLinks = [
   ["Home", "/#top"],
@@ -31,7 +32,7 @@ export function SiteHeader() {
     <>
       <nav className="nav" aria-label="Navigasi utama">
         <Link className="logo" href="/#top" aria-label="SenangPlanner — halaman utama">
-          <Image src="/images/senangplanner-logo.png" alt="Senang Planners — Kami Datang, Anda Senang." width={372} height={219} unoptimized />
+          <Image src={publicAssetPath("/images/senangplanner-logo.png")} alt="Senang Planners — Kami Datang, Anda Senang." width={372} height={219} unoptimized />
         </Link>
         <div className="np">
           <button

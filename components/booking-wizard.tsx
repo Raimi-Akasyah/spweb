@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { availabilityFallback } from "@/data/availability";
+import { publicAssetPath } from "@/lib/public-asset";
 import {
   getAvailabilityForMonth,
   parseAvailabilityCsv,
@@ -719,7 +720,7 @@ export function BookingWizard() {
       <div className="booking-page__wrap">
         <header className="booking-page__header">
           <Link className="booking-page__logo" href="/" aria-label="Senang Planners — Kami Datang, Anda Senang.">
-            <Image src="/images/senangplanner-logo.png" alt="Senang Planners — Kami Datang, Anda Senang." width={372} height={219} unoptimized />
+            <Image src={publicAssetPath("/images/senangplanner-logo.png")} alt="Senang Planners — Kami Datang, Anda Senang." width={372} height={219} unoptimized />
           </Link>
           <Link className="booking-page__home-link" href="/">← Laman utama</Link>
         </header>

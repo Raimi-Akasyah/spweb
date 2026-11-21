@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { site } from "@/data/site";
+import { publicAssetPath } from "@/lib/public-asset";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 
 export function Footer() {
@@ -34,7 +35,7 @@ export function Footer() {
           </Link>
         </div>
         <div className="wm" aria-hidden="true">
-          <Image src="/images/senangplanner-logo.png" alt="" width={372} height={219} unoptimized />
+          <Image src={publicAssetPath("/images/senangplanner-logo.png")} alt="" width={372} height={219} unoptimized />
         </div>
         <div className="cp">
           {site.descriptor} · {site.region} · © {new Date().getFullYear()} SenangPlanner. All rights reserved.{" "}

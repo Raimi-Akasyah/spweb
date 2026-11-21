@@ -3,11 +3,13 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { gallery } from "@/data/gallery";
+import { publicAssetPath } from "@/lib/public-asset";
 
 const filters = [
   { key: "all", label: `Semua (${gallery.length})` },
+  { key: "acara", label: "Acara" },
   { key: "pakej", label: "Pakej" },
-  { key: "pasukan", label: "Pasukan & Visi" },
+  { key: "pasukan", label: "Pasukan" },
 ];
 const layouts = ["ga", "gb", "gc", "gd"];
 
@@ -46,10 +48,10 @@ export function GallerySection() {
             {items.map((item) => {
               const originalIndex = gallery.indexOf(item);
               return (
-                <figure className={`gi ${layouts[originalIndex]}`} key={item.title}>
+                <figure className={`gi ${layouts[originalIndex % layouts.length]}`} key={item.title}>
                   <div className="fr">
                     <Image
-                      src={item.image}
+                      src={publicAssetPath(item.image)}
                       alt={item.alt}
                       width={1080}
                       height={1080}
@@ -59,9 +61,9 @@ export function GallerySection() {
                   <figcaption>
                     {item.title}
                     <small>{item.caption}</small>
-                    {item.reelUrl && (
-                      <a href={item.reelUrl} target="_blank" rel="noopener noreferrer">
-                        Lihat profil
+                    {item.linkUrl && (
+                      <a href={item.linkUrl} target="_blank" rel="noopener noreferrer">
+                        {item.linkLabel}
                       </a>
                     )}
                   </figcaption>

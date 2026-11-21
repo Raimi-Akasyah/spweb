@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { publicAssetPath } from "@/lib/public-asset";
 
 type ImageLightboxProps = {
   src: string;
@@ -36,7 +37,7 @@ export function ImageLightbox({
         onClick={() => setOpen(true)}
         aria-label={triggerLabel}
       >
-        <Image src={src} alt={alt} width={width} height={height} unoptimized />
+        <Image src={publicAssetPath(src)} alt={alt} width={width} height={height} unoptimized />
         <span>{triggerLabel}</span>
       </button>
       {open && (
@@ -57,7 +58,7 @@ export function ImageLightbox({
           >
             Tutup
           </button>
-          <Image src={src} alt={alt} width={width} height={height} unoptimized />
+          <Image src={publicAssetPath(src)} alt={alt} width={width} height={height} unoptimized />
         </dialog>
       )}
     </>

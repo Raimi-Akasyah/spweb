@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { availabilityFallback } from "@/data/availability";
+import { publicAssetPath } from "@/lib/public-asset";
 import {
   getAvailabilityForMonth,
   parseAvailabilityCsv,
@@ -256,9 +258,21 @@ export function Hero() {
             <div className="fine">Free vibe check · Reply bawah 24 jam · Transparent pricing</div>
           </div>
           <div className="col" id="col" aria-label="Kolaj majlis perkahwinan">
-            <div className="fr c1"><div className="im p-window" role="img" aria-label="Pasangan pengantin di taman" /></div>
-            <div className="fr c2"><div className="im p-sea" role="img" aria-label="Pasangan pengantin di tepi laut" /></div>
-            <div className="fr c3"><div className="im p-warm" role="img" aria-label="Majlis pengantin SenangPlanner" /></div>
+            <div className="fr c1">
+              <div className="im p-window">
+                <Image src={publicAssetPath("/images/event-arisa-hakim.jpg")} alt="Pasukan Senang Planners di majlis persandingan Arisa Sofia dan Hakim" fill priority sizes="(max-width: 700px) 45vw, 260px" />
+              </div>
+            </div>
+            <div className="fr c2">
+              <div className="im p-sea">
+                <Image src={publicAssetPath("/images/event-ismal-farhan.jpg")} alt="Pasukan Senang Planners di majlis Isma dan Farhan" fill sizes="(max-width: 700px) 45vw, 230px" />
+              </div>
+            </div>
+            <div className="fr c3">
+              <div className="im p-warm">
+                <Image src={publicAssetPath("/images/event-syafiq-izzaty.jpg")} alt="Pasukan Senang Planners bersama pengantin Syafiq dan Izzaty" fill sizes="(max-width: 700px) 60vw, 310px" />
+              </div>
+            </div>
             <div className="tkm"><small>Event Pass</small>Tarikh anda.</div>
           </div>
         </div>
