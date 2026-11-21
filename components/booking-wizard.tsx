@@ -555,18 +555,6 @@ export function BookingWizard() {
     setBookingMessage("");
     setBookingError("");
 
-    if (preparedSubmitRef.current) {
-      preparedSubmitRef.current = false;
-      timeoutRef.current = window.setTimeout(() => {
-        preparedSubmitRef.current = false;
-        if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
-        submissionPollRef.current = null;
-        setSubmitting(false);
-        setBookingError("Tempahan mengambil masa terlalu lama. Sila cuba lagi; jika terus berlaku, jangan tambah tempahan yang sama.");
-      }, 15000);
-      return;
-    }
-
     event.preventDefault();
     if (!selectedDate) {
       setBookingError("Pilih tarikh majlis pada kalendar dahulu.");
@@ -631,7 +619,34 @@ export function BookingWizard() {
       submissionPollRef.current = window.setInterval(() => {
         setRefreshKey((value) => value + 1);
       }, 1000);
-      form.requestSubmit();
+
+      if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(() => {
+        preparedSubmitRef.current = false;
+        if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
+        submissionPollRef.current = null;
+        setSubmitting(false);
+        setBookingError("Tempahan mengambil masa terlalu lama. Sila cuba lagi; jika terus berlaku, jangan tambah tempahan yang sama.");
+      }, 15000);
+
+      const params = new URLSearchParams();
+      new FormData(form).forEach((value, key) => {
+        if (typeof value === "string") params.append(key, value);
+      });
+
+      fetch(bookingEndpoint, {
+        method: "POST",
+        mode: "no-cors",
+        body: params,
+      }).catch(() => {
+        preparedSubmitRef.current = false;
+        if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
+        submissionPollRef.current = null;
+        if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+        setSubmitting(false);
+        setBookingError("Tempahan tidak dapat dihantar. Semak sambungan internet dan cuba lagi.");
+      });
     };
 
     if (!proofFile) {
