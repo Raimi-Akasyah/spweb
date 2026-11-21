@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { site } from "@/data/site";
-import { WhatsAppButton } from "@/components/whatsapp-button";
 
 const links = [
   ["Home", "#home"],
@@ -27,10 +27,10 @@ export function SiteHeader() {
 
   return (
     <>
-      <a className="announcement" href="#availability">
+      <Link className="announcement" href="/booking">
         <span>Tarikh majlis anda masih tersedia?</span>
         <span className="announcement__link">Semak availability <span aria-hidden="true">↴</span></span>
-      </a>
+      </Link>
       <header className="site-header">
         <a className="wordmark" href="#home" aria-label="SenangPlanner — Home">
           Senang<span>Planner</span>
@@ -40,22 +40,16 @@ export function SiteHeader() {
             <a key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <WhatsAppButton
-          className="header-book"
-          message="Hi SenangPlanner, saya ingin berbincang tentang majlis saya."
-        >
-          Book Event <span aria-hidden="true">↗</span>
-        </WhatsAppButton>
+        <Link className="header-book" href="/booking">
+          Pick your date <span aria-hidden="true">↗</span>
+        </Link>
       </header>
       <div className="fixed-tabs" aria-label="Quick navigation">
         <button type="button" onClick={() => setMenuOpen(true)}>MENU <span aria-hidden="true">↴</span></button>
         <a href="#packages">PACKAGES <span aria-hidden="true">↴</span></a>
-        <WhatsAppButton
-          message="Hi SenangPlanner, saya ingin menempah acara."
-          variant="dark"
-        >
+        <Link className="button button--dark" href="/booking">
           BOOK EVENT <span aria-hidden="true">↗</span>
-        </WhatsAppButton>
+        </Link>
       </div>
       {menuOpen && (
         <div className="menu-overlay" role="dialog" aria-modal="true" aria-label="Main menu">

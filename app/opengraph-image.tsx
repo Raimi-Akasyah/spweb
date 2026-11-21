@@ -21,7 +21,7 @@ export default function OpenGraphImage() {
           fontFamily: "serif",
         }}
       >
-        <div style={{ fontSize: 28, letterSpacing: 4 }}>WEDDING & EVENT MANAGEMENT</div>
+        <div style={{ fontSize: 28, letterSpacing: 4 }}>YOUR WEDDING ERA STARTS HERE</div>
         <div
           style={{
             display: "flex",
@@ -31,9 +31,9 @@ export default function OpenGraphImage() {
             maxWidth: 950,
           }}
         >
-          Kami uruskan stress,
+          Majlis impian.
           <br />
-          anda nikmati majlis.
+          Stress? Tak payah.
         </div>
         <div style={{ fontSize: 28, color: "#b8923a" }}>SENANGPLANNER · MALAYSIA</div>
       </div>

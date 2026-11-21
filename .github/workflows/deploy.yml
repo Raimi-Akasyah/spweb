@@ -40,6 +40,7 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://raimi-akasyah.github.io/spweb
           NEXT_PUBLIC_WA_NUMBER: ${{ vars.NEXT_PUBLIC_WA_NUMBER }}
           NEXT_PUBLIC_AVAILABILITY_CSV_URL: ${{ vars.NEXT_PUBLIC_AVAILABILITY_CSV_URL }}
+          NEXT_PUBLIC_APPS_SCRIPT_URL: ${{ vars.NEXT_PUBLIC_APPS_SCRIPT_URL }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

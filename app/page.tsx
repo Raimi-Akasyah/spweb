@@ -1,5 +1,4 @@
 import { AboutSection } from "@/components/about-section";
-import { AvailabilityCalendar } from "@/components/availability-calendar";
 import { ClosingSection } from "@/components/closing-section";
 import { Footer } from "@/components/footer";
 import { GallerySection } from "@/components/gallery-section";
@@ -17,10 +16,17 @@ export default function Home() {
       <SiteHeader />
       <main>
         <Hero />
+        <div className="ticker" aria-label="Planning highlights">
+          <div className="ticker__track">
+            <span>YOUR DAY, YOUR RULES</span><i>✳</i>
+            <span>LESS STRESS, MORE DANCE FLOOR</span><i>✳</i>
+            <span>YOUR DAY, YOUR RULES</span><i>✳</i>
+            <span>LESS STRESS, MORE DANCE FLOOR</span><i>✳</i>
+          </div>
+        </div>
         <AboutSection />
         <WaysSection />
         <PackagesSection />
-        <AvailabilityCalendar />
         <ReviewsSection />
         <VisionSection />
         <TeamSection />

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, Instrument_Serif, Sora } from "next/font/google";
 import "./globals.css";
+import "./gen-z.css";
+import "./cinema-design.css";
+import "./booking.css";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -24,14 +27,14 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: "SenangPlanner — Wedding & Event Management",
   description:
-    "Kami uruskan stress, anda nikmati majlis. Perancangan dan koordinasi acara di seluruh Malaysia.",
+    "Majlis impian, stress tak payah. Pilih tarikh dan book wedding anda dengan SenangPlanner.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://example.com",
   ),
   openGraph: {
-    title: "SenangPlanner — Kami uruskan stress, anda nikmati majlis.",
+    title: "SenangPlanner — Majlis impian. Stress? Tak payah.",
     description:
-      "Perancangan dan koordinasi acara di seluruh Malaysia. Mulakan dengan konsultasi percuma.",
+    "You bring the butterflies. Kami uruskan the timeline, vendors dan last-minute plot twist.",
     siteName: "SenangPlanner",
     type: "website",
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],

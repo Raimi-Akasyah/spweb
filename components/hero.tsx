@@ -1,4 +1,5 @@
 import { site } from "@/data/site";
+import Link from "next/link";
 import { PhotoPlaceholder } from "@/components/photo-placeholder";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 
@@ -41,19 +42,29 @@ export function Hero() {
         />
       </div>
       <div className="hero__copy">
-        <h1>Kami uruskan stress, <br />anda nikmati majlis.</h1>
+        <p className="hero__kicker">YOUR BIG DAY, FRONT ROW <span aria-hidden="true">✳</span></p>
+        <h2>Kahwin je.<br /><em>Biar kami settle.</em></h2>
+        <p className="hero__promise">
+          Moodboard cantik, vendor on time, timeline jalan. You fokus pilih outfit and enjoy your day.
+        </p>
         <div className="hero__rule" />
-        <p className="hero__quote">“We handle the stress, you handle the joy.”</p>
+        <p className="hero__quote">“No spreadsheet tears. Just happy tears.”</p>
         <div className="hero__rule" />
         <div className="hero__actions">
+          <Link className="hero__book-link" href="/booking">
+            Pick your date <span aria-hidden="true">↘</span>
+          </Link>
           <WhatsAppButton
-            variant="text"
+            variant="outline"
             message="Hi SenangPlanner, saya ingin mendapatkan konsultasi percuma tentang majlis saya."
           >
-            WhatsApp kami
+            Tanya dulu <span aria-hidden="true">↗</span>
           </WhatsAppButton>
-          <p className="hero__consultation">free consultation<br />balas dalam sehari</p>
         </div>
+        <p className="hero__microcopy">Free consultation · Balas dalam sehari · Seluruh Malaysia</p>
+      </div>
+      <div className="hero__sticker" aria-label="Good vibes only">
+        <span>GOOD</span><strong>VIBES</strong><span>ONLY ✳</span>
       </div>
       <div className="hero__tagline">
         <span>Plan The</span>
