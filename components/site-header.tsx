@@ -30,7 +30,7 @@ export function SiteHeader() {
 
   return (
     <>
-      <nav className="nav" aria-label="Navigasi utama">
+      <nav className={`nav${menuOpen ? " menu-open" : ""}`} aria-label="Navigasi utama">
         <Link className="logo" href="/#top" aria-label="SenangPlanner — halaman utama">
           <Image src={publicAssetPath("/images/senangplanner-logo.png")} alt="Senang Planners — Kami Datang, Anda Senang." width={372} height={219} unoptimized />
         </Link>
@@ -52,9 +52,8 @@ export function SiteHeader() {
       </nav>
       {menuOpen && (
         <nav className="menu on" id="main-menu" aria-label="Semua halaman">
-          {menuLinks.map(([label, href], index) => (
+          {menuLinks.map(([label, href]) => (
             <Link
-              className={index === 0 ? "cur" : ""}
               href={href}
               key={href}
               onClick={() => setMenuOpen(false)}
