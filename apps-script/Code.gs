@@ -23,6 +23,7 @@ const HEADERS = [
   "Payment Proof URL",
   "Remaining Balance",
   "Terms Accepted",
+  "Calendar Event ID",
 ];
 const MAX_PAYMENT_PROOF_BYTES = 10 * 1024 * 1024;
 const PAYMENT_PROOF_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
@@ -34,6 +35,11 @@ function setup() {
   PropertiesService.getScriptProperties().setProperty(
     "SPREADSHEET_ID",
     spreadsheet.getId(),
+  );
+  const calendar = CalendarApp.getDefaultCalendar();
+  PropertiesService.getScriptProperties().setProperty(
+    "CALENDAR_ID",
+    calendar.getId(),
   );
   getBookingsSheet_(spreadsheet);
   getPaymentProofFolder_();
@@ -101,42 +107,51 @@ function doPost(event) {
         });
       }
 
-      const proofUrl = booking.proofData
+      const proof = booking.proofData
         ? savePaymentProof_(booking)
-        : "";
+        : { fileId: "", url: "" };
       const bookingId = Utilities.getUuid();
-      sheet.appendRow([
-        bookingId,
-        new Date(),
-        safeSheetText_(booking.name),
-        safeSheetText_(booking.whatsapp),
-        booking.eventDate,
-        safeSheetText_(booking.eventType),
-        safeSheetText_(booking.packageName),
-        booking.guestCount,
-        safeSheetText_(booking.notes),
-        "confirmed",
-        safeSheetText_(booking.venue),
-        "yes",
-        safeSheetText_(booking.email),
-        booking.eventDay,
-        safeSheetText_(booking.eventTime),
-        safeSheetText_(booking.eventTypeOther),
-        safeSheetText_(booking.services.join(", ")),
-        safeSheetText_(booking.serviceOther),
-        safeSheetText_(booking.theme),
-        safeSheetText_(booking.budget),
-        booking.depositAmount,
-        proofUrl,
-        booking.remainingBalance,
-        "yes",
-      ]);
+      let calendarEvent = null;
+      try {
+        calendarEvent = createCalendarEvent_(bookingId, booking);
+        sheet.appendRow([
+          bookingId,
+          new Date(),
+          safeSheetText_(booking.name),
+          safeSheetText_(booking.whatsapp),
+          booking.eventDate,
+          safeSheetText_(booking.eventType),
+          safeSheetText_(booking.packageName),
+          booking.guestCount,
+          safeSheetText_(booking.notes),
+          "confirmed",
+          safeSheetText_(booking.venue),
+          "yes",
+          safeSheetText_(booking.email),
+          booking.eventDay,
+          safeSheetText_(booking.eventTime),
+          safeSheetText_(booking.eventTypeOther),
+          safeSheetText_(booking.services.join(", ")),
+          safeSheetText_(booking.serviceOther),
+          safeSheetText_(booking.theme),
+          safeSheetText_(booking.budget),
+          booking.depositAmount,
+          proof.url,
+          booking.remainingBalance,
+          "yes",
+          calendarEvent.getId(),
+        ]);
+      } catch (error) {
+        if (calendarEvent) calendarEvent.deleteEvent();
+        if (proof.fileId) DriveApp.getFileById(proof.fileId).setTrashed(true);
+        throw error;
+      }
 
       return bookingResult_(requestId, {
         ok: true,
         bookingId: bookingId,
         eventDate: booking.eventDate,
-        message: "Tarikh anda telah ditempah. Pasukan kami akan menghubungi anda di WhatsApp.",
+        message: "Tempahan disimpan dalam Google Sheets dan tarikh telah dimasukkan ke dalam kalendar. Pasukan kami akan menghubungi anda.",
       });
     } finally {
       lock.releaseLock();
@@ -293,7 +308,44 @@ function savePaymentProof_(booking) {
     booking.proofType,
     Utilities.getUuid() + "-" + safeName,
   );
-  return getPaymentProofFolder_().createFile(blob).getUrl();
+  const file = getPaymentProofFolder_().createFile(blob);
+  return { fileId: file.getId(), url: file.getUrl() };
+}
+
+function createCalendarEvent_(bookingId, booking) {
+  const calendarId = PropertiesService.getScriptProperties().getProperty("CALENDAR_ID");
+  const calendar = calendarId
+    ? CalendarApp.getCalendarById(calendarId)
+    : CalendarApp.getDefaultCalendar();
+  if (!calendar) throw new Error("Kalendar tempahan tidak dapat diakses.");
+
+  const eventType = booking.eventType === "Lain-lain"
+    ? booking.eventTypeOther
+    : booking.eventType;
+  const title = "SenangPlanner | " + booking.name + " | " + eventType;
+  const description = [
+    "Booking ID: " + bookingId,
+    "Nama: " + booking.name,
+    "WhatsApp: " + booking.whatsapp,
+    "E-mel: " + (booking.email || "—"),
+    "Jenis majlis: " + eventType,
+    "Masa majlis: " + booking.eventTime,
+    "Pakej: " + booking.packageName,
+    "Jumlah tetamu: " + booking.guestCount,
+    "Lokasi: " + booking.venue,
+    "Servis: " + booking.services.join(", "),
+    "Tema / konsep: " + (booking.theme || "—"),
+    "Bajet: " + (booking.budget || "—"),
+    "Deposit (RM): " + booking.depositAmount,
+    "Baki (RM): " + booking.remainingBalance,
+    "Bukti pembayaran: " + (booking.proofData ? "Disimpan dalam Google Drive" : "Tiada"),
+    "Nota: " + (booking.notes || "—"),
+  ].join("\n");
+  const eventDate = new Date(booking.eventDate + "T12:00:00");
+  return calendar.createAllDayEvent(title, eventDate, {
+    description: description,
+    location: booking.venue,
+  });
 }
 
 function isValidPaymentImage_(bytes, mimeType) {

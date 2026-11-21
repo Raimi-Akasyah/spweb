@@ -10,7 +10,6 @@ import {
   type AvailabilityDate,
   type AvailabilityStatus,
 } from "@/lib/availability";
-import { waLink } from "@/lib/whatsapp";
 import { ImageLightbox } from "@/components/image-lightbox";
 
 const monthNames = [
@@ -131,8 +130,6 @@ export function BookingWizard() {
   const [loading, setLoading] = useState(true);
   const [bookingMessage, setBookingMessage] = useState("");
   const [bookingError, setBookingError] = useState("");
-  const [bookingNotice, setBookingNotice] = useState("");
-  const [whatsAppFallbackUrl, setWhatsAppFallbackUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [proofFileName, setProofFileName] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
@@ -410,8 +407,6 @@ export function BookingWizard() {
 
   function advanceStep() {
     setBookingError("");
-    setBookingNotice("");
-    setWhatsAppFallbackUrl("");
     setBookingMessage("");
     const form = formRef.current;
     if (!form) return false;
@@ -533,8 +528,6 @@ export function BookingWizard() {
 
     setBookingMessage("");
     setBookingError("");
-    setBookingNotice("");
-    setWhatsAppFallbackUrl("");
 
     if (preparedSubmitRef.current) {
       preparedSubmitRef.current = false;
@@ -551,45 +544,12 @@ export function BookingWizard() {
       return;
     }
 
-    const form = event.currentTarget;
     if (!bookingEndpoint) {
-      const values = new FormData(form);
-      const value = (name: string) => String(values.get(name) ?? "").trim() || "—";
-      const eventType = value("eventType") === "Lain-lain"
-        ? value("eventTypeOther")
-        : value("eventType");
-      const services = values.getAll("services").map(String).map((service) =>
-        service === "Lain-lain" ? value("serviceOther") : service,
-      );
-      const proofFile = proofInputRef.current?.files?.[0];
-      const message = [
-        "*Tempahan Senang Planners*",
-        `Nama: ${value("name")}`,
-        `WhatsApp: ${value("whatsapp")}`,
-        `E-mel: ${value("email")}`,
-        `Tarikh: ${formatSelectedDate(selectedDate)}`,
-        `Jenis majlis: ${eventType}`,
-        `Masa: ${value("eventTime")}`,
-        `Pakej: ${value("packageName")}`,
-        `Jumlah tetamu: ${value("guestCount")}`,
-        `Lokasi: ${value("venue")}`,
-        `Servis: ${services.join(", ") || "—"}`,
-        `Tema: ${value("theme")}`,
-        `Bajet: ${value("budget")}`,
-        `Deposit (RM): ${value("depositAmount")}`,
-        `Baki (RM): ${value("remainingBalance")}`,
-        `Nota: ${value("notes")}`,
-        `Bukti bayaran: ${proofFile ? `${proofFile.name} (akan dilampirkan dalam chat)` : "Tiada"}`,
-      ].join("\n");
-      const fallbackUrl = waLink(message);
-      setWhatsAppFallbackUrl(fallbackUrl);
-      setBookingNotice(
-        "Sambungan Google Sheets belum diaktifkan. Semak butiran dalam WhatsApp dan tekan Hantar; lampirkan bukti bayaran dalam chat jika ada.",
-      );
-      window.open(fallbackUrl, "_blank", "noopener,noreferrer");
+      setBookingError("Tempahan belum boleh dihantar kerana sambungan Google Sheets belum diaktifkan. Sila cuba lagi kemudian.");
       return;
     }
 
+    const form = event.currentTarget;
     setSubmitting(true);
 
     const selectedServices = form.querySelectorAll<HTMLInputElement>('input[name="services"]:checked');
@@ -692,8 +652,6 @@ export function BookingWizard() {
     formRef.current?.reset();
     setBookingMessage("");
     setBookingError("");
-    setBookingNotice("");
-    setWhatsAppFallbackUrl("");
     setSelectedDate("");
     setTicketDetails(emptyTicketDetails);
     setProofFileName("");
@@ -765,14 +723,10 @@ export function BookingWizard() {
                 noValidate
                 onInput={() => {
                   setBookingError("");
-                  setBookingNotice("");
-                  setWhatsAppFallbackUrl("");
                   updateTicketDetails();
                 }}
                 onChange={() => {
                   setBookingError("");
-                  setBookingNotice("");
-                  setWhatsAppFallbackUrl("");
                   updateTicketDetails();
                 }}
                 onSubmit={submitBooking}
@@ -1040,16 +994,10 @@ export function BookingWizard() {
                 </section>
 
                 {bookingError && <p className="booking-wizard__error" role="alert">{bookingError}</p>}
-                {bookingNotice && <p className="booking-wizard__notice booking-wizard__notice--status" role="status">{bookingNotice}</p>}
-                {whatsAppFallbackUrl && (
-                  <a
-                    className="booking-wizard__button booking-wizard__whatsapp-link"
-                    href={whatsAppFallbackUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Teruskan melalui WhatsApp
-                  </a>
+                {!bookingEndpoint && step === 5 && (
+                  <p className="booking-wizard__notice booking-wizard__notice--status" role="status">
+                    Sambungan tempahan Google Sheets belum diaktifkan. Borang ini tidak akan dihantar melalui WhatsApp.
+                  </p>
                 )}
                 {process.env.NODE_ENV === "development" && (
                   <div className="booking-wizard__demo">
@@ -1114,9 +1062,9 @@ export function BookingWizard() {
                   className="booking-wizard__button"
                   type="submit"
                   form="booking-form"
-                  disabled={submitting}
+                  disabled={submitting || !bookingEndpoint}
                 >
-                  {submitting ? "Sedang hantar..." : bookingEndpoint ? "Confirm & Tempah" : "Hantar melalui WhatsApp"}
+                  {submitting ? "Sedang hantar..." : bookingEndpoint ? "Confirm & Tempah" : "Tempahan belum aktif"}
                 </button>
               )}
             </div>

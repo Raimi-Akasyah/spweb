@@ -23,14 +23,14 @@ The hero, team, vision/mission and package areas use images supplied for Senang 
 
 ## Booking storage and calendar
 
-The homepage's **Book Event** and **Pick your date** buttons open the five-step event-pass wizard at `/booking/`; the booking flow is a separate page, not an inline homepage form. It collects contact details, date and time, venue, event type, requested services, guest count, theme and budget, deposit and balance amounts, optional payment-proof image, and consent to the terms. When `NEXT_PUBLIC_APPS_SCRIPT_URL` is configured, submissions are stored as rows in the Google Sheet through the Apps Script web app in `apps-script/Code.gs`. The script confirms a date immediately, rejects a competing booking for the same date, and returns confirmed dates to the calendar. New columns are appended automatically when the script next accesses an existing bookings sheet.
+The homepage's **Book Event** and **Pick your date** buttons open the five-step event-pass wizard at `/booking/`; the booking flow is a separate page, not an inline homepage form. It collects contact details, date and time, venue, event type, requested services, guest count, theme and budget, deposit and balance amounts, optional payment-proof image, and consent to the terms. When `NEXT_PUBLIC_APPS_SCRIPT_URL` is configured, submissions are stored as rows in the Google Sheet through the Apps Script web app in `apps-script/Code.gs`. The script creates an all-day event with booking details in the Google account's default calendar, rejects a competing booking for the same date, and returns confirmed dates to the calendar picker. New columns are appended automatically when the script next accesses an existing bookings sheet.
 
-Without that URL, the submit button opens a WhatsApp message pre-filled with the booking details. The customer must review and send the message; any payment-proof image must be attached manually. This fallback does not write to Google Sheets or reserve dates. In local development, **Isi contoh (demo)** only fills the browser form; it does not submit or attach a payment image.
+Without that URL, bookings are disabled and are not redirected to WhatsApp. In local development, **Isi contoh (demo)** only fills the browser form; it does not submit or attach a payment image.
 
 The booking backend targets spreadsheet `1fBxefY_vrzAwi8JYqa_kwp3-PjppFrwJUe87PmElYVw`. The Apps Script project URL in a browser is an editor link, not the web-app endpoint needed by the site.
 
 1. The Apps Script project's `Code.gs` is synchronized with `apps-script/Code.gs` and exposes `setup()`, `doGet()` and `doPost()`.
-2. Run `setup()` once from the editor and approve the requested Sheets and Drive access. This creates the `Bookings` tab and a private Drive folder for optional payment-proof images.
+2. Run `setup()` once from the editor and approve the requested Sheets, Drive and Calendar access. This creates the `Bookings` tab, stores the default calendar ID and creates a private Drive folder for optional payment-proof images.
 3. Deploy as a **Web app**, execute as your account, and allow access to **Anyone** so the public site can submit. Copy the deployment URL ending in `/exec` (it is different from the project/editor URL).
 4. Set `NEXT_PUBLIC_APPS_SCRIPT_URL` to that `/exec` URL in `.env.local` for local development. In GitHub, set it under **Settings → Secrets and variables → Actions → Variables**, then run **Deploy to GitHub Pages**.
 
