@@ -185,7 +185,6 @@ export function BookingWizard() {
     let script: HTMLScriptElement | undefined;
     setLoading(true);
     setError("");
-    setSelectedDate("");
 
     if (bookingEndpoint) {
       const callbackName = "senangCallback_senangPlannerAvailability";
