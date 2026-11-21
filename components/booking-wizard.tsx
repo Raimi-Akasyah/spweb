@@ -144,6 +144,7 @@ export function BookingWizard() {
   const requestedDateRef = useRef<string | null>(null);
   const preparedSubmitRef = useRef(false);
   const timeoutRef = useRef<number | null>(null);
+  const submissionPollRef = useRef<number | null>(null);
   const bookingEndpoint =
     process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ||
     "https://script.google.com/macros/s/AKfycbyFUVZOX9wv9NS9jUM9V91eMTSY9wKqg8BKFJLxSPoBZYMUa51IKP0jfu01GVw1PLQg/exec";
@@ -277,6 +278,8 @@ export function BookingWizard() {
       const result = data.result as BookingMessage["result"];
       if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
+      if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
+      submissionPollRef.current = null;
       setSubmitting(false);
       preparedSubmitRef.current = false;
 
@@ -300,6 +303,7 @@ export function BookingWizard() {
     return () => {
       window.removeEventListener("message", handleBookingMessage);
       if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
+      if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
     };
   }, []);
 
@@ -329,6 +333,8 @@ export function BookingWizard() {
     preparedSubmitRef.current = false;
     if (timeoutRef.current !== null) window.clearTimeout(timeoutRef.current);
     timeoutRef.current = null;
+    if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
+    submissionPollRef.current = null;
     setSubmitting(false);
     setBookingError("");
     setBookingMessage(
@@ -554,9 +560,11 @@ export function BookingWizard() {
       preparedSubmitRef.current = false;
       timeoutRef.current = window.setTimeout(() => {
         preparedSubmitRef.current = false;
+        if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
+        submissionPollRef.current = null;
         setSubmitting(false);
         setBookingError("Tempahan mengambil masa terlalu lama. Sila cuba lagi; jika terus berlaku, jangan tambah tempahan yang sama.");
-      }, 30000);
+      }, 15000);
       return;
     }
 
@@ -620,6 +628,10 @@ export function BookingWizard() {
       if (requestIdInputRef.current) requestIdInputRef.current.value = window.crypto.randomUUID();
       requestIdRef.current = requestIdInputRef.current?.value ?? "";
       preparedSubmitRef.current = true;
+      if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
+      submissionPollRef.current = window.setInterval(() => {
+        setRefreshKey((value) => value + 1);
+      }, 1000);
       form.requestSubmit();
     };
 
@@ -672,6 +684,8 @@ export function BookingWizard() {
 
   function resetBooking() {
     formRef.current?.reset();
+    if (submissionPollRef.current !== null) window.clearInterval(submissionPollRef.current);
+    submissionPollRef.current = null;
     setBookingMessage("");
     setBookingError("");
     setSelectedDate("");
