@@ -52,7 +52,9 @@ function DateSection() {
   const [selectedDate, setSelectedDate] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const bookingEndpoint = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ?? "";
+  const bookingEndpoint =
+    process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ||
+    "https://script.google.com/macros/s/AKfycbyFUVZOX9wv9NS9jUM9V91eMTSY9wKqg8BKFJLxSPoBZYMUa51IKP0jfu01GVw1PLQg/exec";
 
   useEffect(() => {
     const controller = new AbortController();

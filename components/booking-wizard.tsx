@@ -144,7 +144,9 @@ export function BookingWizard() {
   const requestedDateRef = useRef<string | null>(null);
   const preparedSubmitRef = useRef(false);
   const timeoutRef = useRef<number | null>(null);
-  const bookingEndpoint = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ?? "";
+  const bookingEndpoint =
+    process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ||
+    "https://script.google.com/macros/s/AKfycbyFUVZOX9wv9NS9jUM9V91eMTSY9wKqg8BKFJLxSPoBZYMUa51IKP0jfu01GVw1PLQg/exec";
   const ticketType = ticketDetails.eventType === "Lain-lain"
     ? ticketDetails.eventTypeOther || "Lain-lain"
     : ticketDetails.eventType;
