@@ -143,7 +143,7 @@ export const gallery: GalleryItem[] = [
   {
     title: "Majlis Kamalia & Hakimee",
     caption: "18 Oktober 2026",
-    image: "/images/event-kamalia-hakimee.jpg",
+    image: "/images/event-kamalia-hakimee-wide.jpg",
     width: 2980,
     height: 2000,
     alt: "Momen di majlis Kamalia dan Hakimee",
