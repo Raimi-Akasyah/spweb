@@ -535,8 +535,8 @@ export function BookingWizard() {
       preparedSubmitRef.current = false;
       timeoutRef.current = window.setTimeout(() => {
         setSubmitting(false);
-        setBookingError("Tempahan belum dapat disahkan. Sila cuba lagi atau hubungi kami.");
-      }, 90000);
+        setBookingError("Tempahan mengambil masa terlalu lama. Sila cuba lagi; jika terus berlaku, jangan tambah tempahan yang sama.");
+      }, 30000);
       return;
     }
 
