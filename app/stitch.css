@@ -168,7 +168,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .ph p.sub { max-width: 46ch; margin: 20px 0 0; color: var(--mute); font-size: 1.12rem; }
 .package-flyer-trigger { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 0; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: .85rem; font-weight: 800; text-align: left; cursor: zoom-in; }
 .package-flyer-trigger img { display: block; width: 78px; height: 104px; border: 2px solid var(--ink); border-radius: 10px; object-fit: cover; object-position: top; box-shadow: 3px 3px 0 var(--gold); }
-.image-lightbox { position: fixed; width: fit-content; max-width: 94vw; max-height: 94svh; padding: 48px 12px 12px; border: 2px solid var(--ink); border-radius: 16px; background: var(--cream); box-shadow: 8px 8px 0 var(--ink); }
+.image-lightbox { position: fixed; inset: 0; width: fit-content; height: fit-content; max-width: 94vw; max-height: 94svh; margin: auto; padding: 48px 12px 12px; border: 2px solid var(--ink); border-radius: 16px; background: var(--cream); box-shadow: 8px 8px 0 var(--ink); }
 .image-lightbox::backdrop { background: rgba(11,11,11,.82); backdrop-filter: blur(4px); }
 .image-lightbox > img { display: block; width: auto; max-width: min(100%, 860px); height: auto; max-height: calc(94svh - 76px); object-fit: contain; margin: auto; }
 .image-lightbox__close { position: absolute; top: 10px; right: 12px; min-height: 32px; padding: 0 12px; border: 1px solid var(--ink); border-radius: 99px; background: var(--gold); color: var(--ink); font: inherit; font-size: .8rem; font-weight: 800; cursor: pointer; }
