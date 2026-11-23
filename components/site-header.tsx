@@ -14,6 +14,7 @@ export function SiteHeader() {
   const menuLinks = language === "bm"
     ? [
         ["Utama", "/#top"],
+      ["Semak Tarikh", "/#tarikh"],
         ["Servis Kami", "/services"],
         ["Senang Wedding Package", "/packages"],
         ["Portfolio Acara", "/gallery"],
@@ -22,6 +23,7 @@ export function SiteHeader() {
       ]
     : [
         ["Home", "/#top"],
+      ["Check Availability", "/#tarikh"],
         ["Our Services", "/services"],
         ["Senang Wedding Package", "/packages"],
         ["Event Portfolio", "/gallery"],
@@ -59,8 +61,8 @@ export function SiteHeader() {
             <button type="button" className={language === "en" ? "on" : ""} onClick={() => setLanguage("en")} aria-pressed={language === "en"}>EN</button>
           </div>
           <Link className="btn pk" href="/packages">{language === "bm" ? "Pakej" : "Package"}</Link>
-          <Link className="btn gd" href="/contact">
-            {language === "bm" ? "Bincang Acara" : "Discuss Event"} <ArrowUpRight className="i" aria-hidden="true" />
+          <Link className="btn gd" href="/booking">
+            {language === "bm" ? "Tempah Tarikh" : "Book Your Date"} <ArrowUpRight className="i" aria-hidden="true" />
           </Link>
         </div>
       </nav>

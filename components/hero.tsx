@@ -257,10 +257,13 @@ export function Hero() {
               : "From corporate events and product launches to weddings, we organise the run of show, align the team and manage the event from start to finish."}</p>
             <q>{bm ? "Teratur di belakang. Lancar di hadapan." : "Organised behind the scenes. Seamless on stage."}</q>
             <div className="acts">
-              <WhatsAppButton className="btn bk" variant="dark" message={bm
-                ? "Hi Senang Planner! Saya ingin berbincang tentang acara saya."
-                : "Hi Senang Planner! I would like to discuss my event."}>
-                {bm ? "Bincang Acara Anda" : "Discuss Your Event"} <ArrowUpRight className="i" aria-hidden="true" />
+              <Link className="btn bk" href="/booking">
+                {bm ? "Tempah Tarikh" : "Book Your Date"} <ArrowUpRight className="i" aria-hidden="true" />
+              </Link>
+              <WhatsAppButton className="btn wa" variant="outline" message={bm
+                ? "Hi Senang Planner! Saya ingin bertanya tentang servis acara."
+                : "Hi Senang Planner! I have a question about your event services."}>
+                {bm ? "Tanya di WhatsApp" : "Ask on WhatsApp"}
               </WhatsAppButton>
               <Link className="hero-secondary" href="/#servis">
                 {bm ? "Terokai Servis Kami" : "Explore Our Services"} <ArrowRight className="i" aria-hidden="true" />

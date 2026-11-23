@@ -1,6 +1,6 @@
 import { ClosingSection } from "@/components/closing-section";
 import { Footer } from "@/components/footer";
-import { Hero } from "@/components/hero";
+import { DateSection, Hero } from "@/components/hero";
 import { GalleryPreview } from "@/components/gallery-preview";
 import { SiteHeader } from "@/components/site-header";
 import { WaysSection } from "@/components/ways-section";
@@ -13,6 +13,7 @@ export default function Home() {
       <SiteHeader />
       <main id="top">
         <Hero />
+        <DateSection />
         <WaysSection />
         <WeddingPackagePreview />
         <GalleryPreview />
