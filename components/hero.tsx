@@ -268,20 +268,23 @@ export function Hero() {
             </div>
             <div className="fine">{bm ? "Kuala Lumpur · Selangor · Negeri Sembilan" : "Kuala Lumpur · Selangor · Negeri Sembilan"}</div>
           </div>
-          <div className="hero-visual">
-            <div className="hero-visual__image">
-              <Image
-                src={publicAssetPath("/images/event-arisa-hakim-02.jpg")}
-                alt="Pasukan Senang Planners mengendalikan majlis bersama pasangan pengantin"
-                fill
-                priority
-                sizes="(max-width: 800px) 100vw, 55vw"
-              />
+          <div className="hero-collage" aria-label={bm ? "Kolaj majlis yang dikendalikan Senang Planners" : "Collage of events handled by Senang Planners"}>
+            <div className="fr c1">
+              <div className="im p-window">
+                <Image src={publicAssetPath("/images/event-arisa-hakim.jpg")} alt="Pasukan Senang Planners di majlis persandingan Arisa Sofia dan Hakim" fill priority sizes="(max-width: 700px) 45vw, 260px" />
+              </div>
             </div>
-            <div className="hero-visual__caption">
-              <span>{bm ? "PASUKAN SENANG PLANNERS" : "THE SENANG PLANNERS TEAM"}</span>
-              <strong>{bm ? "Di sebalik majlis yang lancar." : "Behind every seamless event."}</strong>
+            <div className="fr c2">
+              <div className="im p-sea">
+                <Image src={publicAssetPath("/images/event-ismal-farhan.jpg")} alt="Pasukan Senang Planners di majlis Isma dan Farhan" fill sizes="(max-width: 700px) 45vw, 230px" />
+              </div>
             </div>
+            <div className="fr c3">
+              <div className="im p-warm">
+                <Image src={publicAssetPath("/images/event-syafiq-izzaty.jpg")} alt="Pasukan Senang Planners bersama pengantin Syafiq dan Izzaty" fill sizes="(max-width: 700px) 60vw, 310px" />
+              </div>
+            </div>
+            <div className="tkm"><small>Event Pass</small>{bm ? "Tarikh anda." : "Your date."}</div>
           </div>
         </div>
       </div>
