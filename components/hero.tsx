@@ -249,9 +249,9 @@ export function Hero() {
     <header className="hero" id="hero">
       <div className="w">
         <div className="hg">
-          <div>
+          <div className="hero-copy">
             <div className="pill">{bm ? "Pengurusan Acara & Majlis" : "Event & Celebration Management"}</div>
-            <h1 className="hx">{bm ? "Kami datang," : "We come,"}<br /><span className="mk">{bm ? "anda senang." : "you relax."}</span></h1>
+            <h1 className="hx">{bm ? "Kami datang," : "We come,"}<br /><span>{bm ? "anda senang." : "you relax."}</span></h1>
             <p className="l">{bm
               ? "Dari acara korporat dan pelancaran produk hingga majlis perkahwinan, kami susun atur cara, selaras pasukan dan kendalikan perjalanan acara pada hari sebenar."
               : "From corporate events and product launches to weddings, we organise the run of show, align the team and manage the event from start to finish."}</p>
@@ -262,27 +262,26 @@ export function Hero() {
                 : "Hi Senang Planner! I would like to discuss my event."}>
                 {bm ? "Bincang Acara Anda" : "Discuss Your Event"} <ArrowUpRight className="i" aria-hidden="true" />
               </WhatsAppButton>
-              <Link className="btn wa" href="/#servis">{bm ? "Terokai Servis Kami" : "Explore Our Services"}</Link>
+              <Link className="hero-secondary" href="/#servis">
+                {bm ? "Terokai Servis Kami" : "Explore Our Services"} <ArrowRight className="i" aria-hidden="true" />
+              </Link>
             </div>
             <div className="fine">{bm ? "Kuala Lumpur · Selangor · Negeri Sembilan" : "Kuala Lumpur · Selangor · Negeri Sembilan"}</div>
           </div>
-          <div className="col" id="col" aria-label="Kolaj majlis perkahwinan">
-            <div className="fr c1">
-              <div className="im p-window">
-                <Image src={publicAssetPath("/images/event-arisa-hakim.jpg")} alt="Pasukan Senang Planners di majlis persandingan Arisa Sofia dan Hakim" fill priority sizes="(max-width: 700px) 45vw, 260px" />
-              </div>
+          <div className="hero-visual">
+            <div className="hero-visual__image">
+              <Image
+                src={publicAssetPath("/images/event-arisa-hakim-02.jpg")}
+                alt="Pasukan Senang Planners mengendalikan majlis bersama pasangan pengantin"
+                fill
+                priority
+                sizes="(max-width: 800px) 100vw, 55vw"
+              />
             </div>
-            <div className="fr c2">
-              <div className="im p-sea">
-                <Image src={publicAssetPath("/images/event-ismal-farhan.jpg")} alt="Pasukan Senang Planners di majlis Isma dan Farhan" fill sizes="(max-width: 700px) 45vw, 230px" />
-              </div>
+            <div className="hero-visual__caption">
+              <span>{bm ? "PASUKAN SENANG PLANNERS" : "THE SENANG PLANNERS TEAM"}</span>
+              <strong>{bm ? "Di sebalik majlis yang lancar." : "Behind every seamless event."}</strong>
             </div>
-            <div className="fr c3">
-              <div className="im p-warm">
-                <Image src={publicAssetPath("/images/event-syafiq-izzaty.jpg")} alt="Pasukan Senang Planners bersama pengantin Syafiq dan Izzaty" fill sizes="(max-width: 700px) 60vw, 310px" />
-              </div>
-            </div>
-            <div className="tkm"><small>Event Pass</small>Tarikh anda.</div>
           </div>
         </div>
       </div>
