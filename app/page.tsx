@@ -1,9 +1,11 @@
 import { ClosingSection } from "@/components/closing-section";
 import { Footer } from "@/components/footer";
-import { DateSection, Hero } from "@/components/hero";
-import { ReviewsSection } from "@/components/reviews-section";
+import { Hero } from "@/components/hero";
+import { GalleryPreview } from "@/components/gallery-preview";
 import { SiteHeader } from "@/components/site-header";
 import { WaysSection } from "@/components/ways-section";
+import { WeddingPackagePreview } from "@/components/wedding-package-preview";
+import { VisionSection } from "@/components/vision-section";
 
 export default function Home() {
   return (
@@ -11,15 +13,10 @@ export default function Home() {
       <SiteHeader />
       <main id="top">
         <Hero />
-        <div className="mq" aria-hidden="true">
-          <div><span>Less stress, more dance floor</span><span className="o">Your day, your rules</span><span>Less stress, more dance floor</span><span className="o">Your day, your rules</span><span>Less stress, more dance floor</span><span className="o">Your day, your rules</span><span>Less stress, more dance floor</span><span className="o">Your day, your rules</span></div>
-        </div>
-        <div className="mq" aria-hidden="true">
-          <div><span>Plan the Senang</span><span className="o">Good venues</span><span>Good vendors</span><span className="o">Good vibes</span><span>Plan the Senang</span><span className="o">Good venues</span><span>Good vendors</span><span className="o">Good vibes</span></div>
-        </div>
-        <DateSection />
         <WaysSection />
-        <ReviewsSection />
+        <WeddingPackagePreview />
+        <GalleryPreview />
+        <VisionSection />
         <ClosingSection />
       </main>
       <Footer />

@@ -1,26 +1,47 @@
 export const services = [
   {
     number: "01",
-    title: "Konsultasi & perancangan",
-    description:
-      "Bincang kehendak anda dan susun atur cara majlis bersama pasukan kami hingga hari majlis.",
-    message:
-      "Hi SenangPlanner, saya ingin berbincang tentang Planning & Consultation.",
+    title: "Pengurusan & Koordinasi Acara",
+    titleEn: "Event Management & Coordination",
+    description: "Kami susun atur cara, selaraskan vendor dan tetapkan peranan pasukan supaya setiap segmen berjalan mengikut jadual.",
+    descriptionEn: "We organise the run of show, coordinate vendors and assign clear crew roles so every segment stays on schedule.",
+    message: "Hi SenangPlanner, saya ingin bertanya tentang Pengurusan & Koordinasi Acara.",
+    messageEn: "Hi Senang Planners, I would like to ask about event management and coordination.",
   },
   {
     number: "02",
-    title: "Wedding day coordination",
-    description:
-      "Wedding Coordinator, Floor Manager, Crew, Bride Assistant dan Emcee memastikan perjalanan majlis terurus.",
-    message:
-      "Hi SenangPlanner, saya ingin tahu tentang Coordination & Emcee.",
+    title: "Pengacara Majlis",
+    titleEn: "Event Host / Emcee",
+    description: "Khidmat emcee untuk acara korporat, makan malam, pelancaran, akad nikah dan persandingan.",
+    descriptionEn: "Emcee services for corporate events, dinners, product launches, akad nikah and wedding receptions.",
+    message: "Hi SenangPlanner, saya ingin bertanya tentang khidmat Pengacara Majlis.",
+    messageEn: "Hi Senang Planners, I would like to ask about your emcee services.",
   },
   {
     number: "03",
-    title: "PA System & Audioman",
-    description:
-      "Sokongan sistem PA dan Audioman, termasuk perbincangan senarai lagu sebelum majlis.",
-    message:
-      "Hi SenangPlanner, saya ingin tahu tentang PA System & Audioman.",
+    title: "Floor Manager & Kru Acara",
+    titleEn: "Floor Manager & Event Crew",
+    description: "Pasukan di lokasi menyelaras pergerakan tetamu, memberi isyarat kepada pengacara dan memastikan pentas bersedia.",
+    descriptionEn: "Our on-site team coordinates guest movement, cues the emcee and prepares the stage for each next segment.",
+    message: "Hi SenangPlanner, saya ingin bertanya tentang Floor Manager & Kru Acara.",
+    messageEn: "Hi Senang Planners, I would like to ask about floor management and event crew.",
+  },
+  {
+    number: "04",
+    title: "Sistem PA & Audioman",
+    titleEn: "PA System & Audio Technician",
+    description: "Sistem bunyi bersama audioman, atau khidmat audioman untuk lokasi yang sudah menyediakan sistem PA.",
+    descriptionEn: "Sound system with an audio technician, or an audio technician for venues that already provide a PA system.",
+    message: "Hi SenangPlanner, saya ingin bertanya tentang Sistem PA & Audioman.",
+    messageEn: "Hi Senang Planners, I would like to ask about the PA system and audio technician service.",
+  },
+  {
+    number: "05",
+    title: "Senang Sewa Intercom",
+    titleEn: "Senang Intercom Rental",
+    description: "Sewaan intercom untuk komunikasi pantas antara pasukan pentas, teknikal dan kru di lokasi.",
+    descriptionEn: "Intercom rentals for clear communication between stage, technical and on-site crew teams.",
+    message: "Hi SenangPlanner, saya ingin bertanya tentang sewaan intercom.",
+    messageEn: "Hi Senang Planners, I would like to ask about intercom rental.",
   },
 ];

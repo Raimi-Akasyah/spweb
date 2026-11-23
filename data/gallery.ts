@@ -9,6 +9,14 @@ type GalleryItem = {
   linkLabel?: string;
 };
 
+export type GalleryEvent = GalleryItem & {
+  eventTypeMs: string;
+  eventTypeEn: string;
+  scopeMs?: string;
+  scopeEn?: string;
+  photos: GalleryItem[];
+};
+
 export const gallery: GalleryItem[] = [
   {
     title: "Majlis Syafiq & Izzaty",
@@ -261,3 +269,83 @@ export const gallery: GalleryItem[] = [
     linkLabel: "Lihat hantaran",
   },
 ];
+
+const verifiedEventDetails: Record<string, Pick<GalleryEvent, "eventTypeMs" | "eventTypeEn" | "scopeMs" | "scopeEn">> = {
+  "https://www.instagram.com/senangplanners.my/p/Dfw9vxAGY5y/": {
+    eventTypeMs: "Majlis bertandang",
+    eventTypeEn: "Wedding reception",
+    scopeMs: "Pengacara majlis · pasukan Wedding Coordinator · Audioman",
+    scopeEn: "Emcee · Wedding Coordinator team · Audio technician",
+  },
+  "https://www.instagram.com/senangplanners.my/p/DfM6s8cmf44/": {
+    eventTypeMs: "Majlis pernikahan & persandingan",
+    eventTypeEn: "Marriage solemnisation & reception",
+    scopeMs: "Pasukan Wedding Coordinator",
+    scopeEn: "Wedding Coordinator team",
+  },
+  "https://www.instagram.com/senangplanners.my/p/DfKV2sgmbWR/": {
+    eventTypeMs: "Majlis persandingan",
+    eventTypeEn: "Wedding reception",
+    scopeMs: "Pasukan Wedding Coordinator",
+    scopeEn: "Wedding Coordinator team",
+  },
+  "https://www.instagram.com/senangplanners.my/p/DfKVRKIGSmc/": {
+    eventTypeMs: "Majlis pernikahan",
+    eventTypeEn: "Marriage solemnisation",
+    scopeMs: "Pasukan Wedding Coordinator",
+    scopeEn: "Wedding Coordinator team",
+  },
+  "https://www.instagram.com/senangplanners.my/p/De5qbBSmZzx/": {
+    eventTypeMs: "Majlis persandingan",
+    eventTypeEn: "Wedding reception",
+    scopeMs: "Pengacara Qayyum · Wedding Coordinator · Sistem PA & Audioman",
+    scopeEn: "Emcee Qayyum · Wedding Coordinator · PA system & audio technician",
+  },
+  "https://www.instagram.com/senangplanners.my/p/DeouYqHGbmk/": {
+    eventTypeMs: "Majlis pernikahan & persandingan",
+    eventTypeEn: "Marriage solemnisation & reception",
+    scopeMs: "Pengacara majlis · Wedding Coordinator",
+    scopeEn: "Emcee · Wedding Coordinator",
+  },
+  "https://www.instagram.com/senangplanners.my/p/DeWsNF8GtQc/": {
+    eventTypeMs: "Majlis persandingan",
+    eventTypeEn: "Wedding reception",
+    scopeMs: "Pengacara majlis · Wedding Coordinator · Sistem PA & Audioman",
+    scopeEn: "Emcee · Wedding Coordinator · PA system & audio technician",
+  },
+  "https://www.instagram.com/senangplanners.my/p/DeT3vrzGknn/": {
+    eventTypeMs: "Majlis perkahwinan",
+    eventTypeEn: "Wedding celebration",
+    scopeMs: "Pengacara Qayyum · Wedding Coordinator · Audioman",
+    scopeEn: "Emcee Qayyum · Wedding Coordinator · Audio technician",
+  },
+  "https://www.instagram.com/senangplanners.my/p/DeT52fempIh/": {
+    eventTypeMs: "Majlis nikah",
+    eventTypeEn: "Marriage solemnisation",
+    scopeMs: "Khidmat pengacara bersama Senang Planners",
+    scopeEn: "Emcee service with Senang Planners",
+  },
+  "https://www.instagram.com/senangplanners.my/p/DeUIoRvGpeC/": {
+    eventTypeMs: "Majlis pernikahan",
+    eventTypeEn: "Marriage solemnisation",
+    scopeMs: "Khidmat pengacara oleh Aelin",
+    scopeEn: "Emcee service by Aelin",
+  },
+};
+
+const eventGroups = new Map<string, GalleryItem[]>();
+for (const item of gallery) {
+  const eventKey = item.linkUrl ?? item.image;
+  const photos = eventGroups.get(eventKey) ?? [];
+  photos.push(item);
+  eventGroups.set(eventKey, photos);
+}
+
+export const galleryEvents: GalleryEvent[] = Array.from(eventGroups.values()).map((photos) => ({
+  ...photos[0],
+  ...verifiedEventDetails[photos[0].linkUrl ?? ""] ?? {
+    eventTypeMs: "Majlis perkahwinan",
+    eventTypeEn: "Wedding celebration",
+  },
+  photos,
+}));

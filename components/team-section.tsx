@@ -1,21 +1,29 @@
+"use client";
+
 import { team, teamProfiles } from "@/data/team";
 import { about } from "@/data/about";
-import { ImageLightbox } from "@/components/image-lightbox";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { useLanguage } from "@/components/language-provider";
 
 export function TeamSection() {
+  const { language } = useLanguage();
+  const bm = language === "bm";
+  const benefits = bm ? about.benefits : about.benefitsEn;
+
   return (
     <section className="team-section">
       <div className="w">
-        <h2>Siapa dalam <span className="ser mk">pasukan kami?</span></h2>
-        <p className="team-intro">Event Coordinator, Event Planner, Emcee dan PA System — satu pasukan untuk merancang serta mengurus majlis anda.</p>
+        <h2>{bm ? "Pasukan " : "Our "}<span className="ser mk">{bm ? "Acara Kami" : "Event Team"}</span></h2>
+        <p className="team-intro">{bm
+          ? "Event Planner, Event Coordinator, Floor Manager, pengacara dan kru menyelaras acara anda dari persediaan hingga acara tamat."
+          : "Our event planners, coordinators, floor managers, emcees and crew coordinate your event from preparation through to completion."}</p>
         <div className="tm">
           {team.map((member, index) => (
             <article className="mb" key={member.role}>
               <span className="team-role-number">{String(index + 1).padStart(2, "0")}</span>
               <div className="role-content">
-                <h3>{member.role}</h3>
-                <p className="bio">{member.description}</p>
+                <h3>{bm ? member.role : member.roleEn}</h3>
+                <p className="bio">{bm ? member.description : member.descriptionEn}</p>
               </div>
             </article>
           ))}
@@ -33,23 +41,17 @@ export function TeamSection() {
         </div>
         <div className="team-after">
           <div className="team-benefits">
-            <span className="ey">Apa yang anda dapat?</span>
-            <ul>{about.benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>
+            <span className="ey">{bm ? "Bagaimana Kami Membantu" : "How We Help"}</span>
+            <ul>{benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>
             <WhatsAppButton
               className="btn bk sm"
-              message="Hi SenangPlanner, saya ingin bertanya tentang servis pasukan untuk majlis saya."
+              message={bm
+                ? "Hi Senang Planners! Saya ingin bertanya tentang pasukan acara."
+                : "Hi Senang Planners! I would like to ask about your event team."}
             >
-              Hubungi pasukan kami
+              {bm ? "Hubungi Pasukan Kami" : "Contact Our Team"}
             </WhatsAppButton>
           </div>
-          <ImageLightbox
-            src="/images/team-and-benefits.jpg"
-            alt="Infografik pasukan dan servis Senang Planners"
-            triggerLabel="Tekan untuk besarkan info pasukan"
-            className="team-poster-trigger"
-            width={768}
-            height={1087}
-          />
         </div>
       </div>
     </section>

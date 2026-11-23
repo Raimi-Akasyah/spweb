@@ -4,8 +4,8 @@ import { GallerySection } from "@/components/gallery-section";
 import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
-  title: "Galeri · SenangPlanner",
-  description: "Kenali pakej, pasukan, visi dan misi Senang Planners.",
+  title: "Portfolio Acara · Senang Planners",
+  description: "Lihat acara yang pernah dikendalikan oleh Senang Planners.",
 };
 
 export default function GalleryPage() {

@@ -5,8 +5,8 @@ import { TeamSection } from "@/components/team-section";
 import { VisionSection } from "@/components/vision-section";
 
 export const metadata: Metadata = {
-  title: "Vibe Check & Pasukan · SenangPlanner",
-  description: "Kenali visi, misi dan pasukan SenangPlanner.",
+  title: "Tentang Kami · Senang Planners",
+  description: "Kenali visi, misi dan pasukan Senang Planners.",
 };
 
 export default function VibeCheckPage() {

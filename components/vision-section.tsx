@@ -1,45 +1,35 @@
+"use client";
+
 import { about } from "@/data/about";
-import { ImageLightbox } from "@/components/image-lightbox";
+import { useLanguage } from "@/components/language-provider";
 
 export function VisionSection() {
+  const { language } = useLanguage();
+  const bm = language === "bm";
+  const mission = bm ? about.mission : about.missionEn;
+  const objectives = bm ? about.objectives : about.objectivesEn;
+
   return (
-    <>
-      <header className="ph">
-        <div className="w">
-          <div className="pill">Visi, Misi &amp; Crew · Kenali Kami</div>
-          <h1>Kenali <span className="ser mk">vibe</span> &amp; team kami.</h1>
-          <p className="sub">{about.intro}</p>
-        </div>
-      </header>
-      <section className="vsec">
-        <div className="w">
-          <div className="vm">
-            <div>
-              <span className="ey">Visi · Vibe Check</span>
-              <h2>Visi</h2>
-              <p>{about.vision}</p>
-            </div>
-            <div>
-              <span className="ey">Misi</span>
-              <ul>{about.mission.map((item) => <li key={item}>{item}</li>)}</ul>
-            </div>
+    <section className="vsec" id="tentang">
+      <div className="w">
+        <p className="ey about-eyebrow">{bm ? "Tentang Kami · Visi & Misi" : "About Us · Vision & Mission"}</p>
+        <div className="vm">
+          <div>
+            <h2>{bm ? "Visi" : "Vision"}</h2>
+            <p>{bm ? about.vision : about.visionEn}</p>
           </div>
-          <div className="vision-objectives">
-            <div>
-              <h2>Objektif</h2>
-              <ul>{about.objectives.map((item) => <li key={item}>{item}</li>)}</ul>
-            </div>
-            <ImageLightbox
-              src="/images/vision-mission.jpg"
-              alt="Infografik visi dan misi Senang Planners"
-              triggerLabel="Tekan untuk besarkan infografik"
-              className="mission-poster-trigger"
-              width={1080}
-              height={595}
-            />
+          <div>
+            <h2>{bm ? "Misi" : "Mission"}</h2>
+            <ul>{mission.map((item) => <li key={item}>{item}</li>)}</ul>
           </div>
         </div>
-      </section>
-    </>
+        <div className="vision-objectives">
+          <div>
+            <h2>{bm ? "Objektif" : "Objectives"}</h2>
+            <ul>{objectives.map((item) => <li key={item}>{item}</li>)}</ul>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

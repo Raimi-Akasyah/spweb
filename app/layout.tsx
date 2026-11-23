@@ -6,6 +6,7 @@ import "./gen-z.css";
 import "./cinema-design.css";
 import "./stitch.css";
 import "./booking.css";
+import { LanguageProvider } from "@/components/language-provider";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -60,7 +61,7 @@ export default function RootLayout({
   return (
     <html lang="ms">
       <body className={`${sora.variable} ${hanken.variable} ${instrumentSerif.variable} ${outfit.variable}`}>
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

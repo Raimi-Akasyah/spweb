@@ -1,106 +1,78 @@
 "use client";
 
-import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { packageAddons, packageFaqs, packages } from "@/data/packages";
+import { packages } from "@/data/packages";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-import { ImageLightbox } from "@/components/image-lightbox";
+import { useLanguage } from "@/components/language-provider";
 
 export function PackagesSection() {
-  const [activePackage, setActivePackage] = useState(0);
-
-  function openOnHover(index: number) {
-    if (window.matchMedia("(hover: hover) and (min-width: 801px)").matches) {
-      setActivePackage(index);
-    }
-  }
+  const { language } = useLanguage();
+  const bm = language === "bm";
 
   return (
     <>
-      <header className="ph">
+      <header className="ph package-page" id="pakej">
         <div className="w">
-          <div className="pill">Pakej Perkahwinan &amp; Acara · 2026 / 2027</div>
-          <h1>Pilih <span className="ser mk">vibe</span> anda.</h1>
-          <p className="sub">Lihat kandungan Senang Wedding Package 2027 dan servis yang pasukan kami sediakan untuk hari istimewa anda.</p>
-          <div className="acc">
-            {packages.map((item, index) => (
-              <article
-                className={`sl${activePackage === index ? " on" : ""}`}
-                key={item.tier}
-                onMouseEnter={() => openOnHover(index)}
-                onFocus={() => setActivePackage(index)}
-              >
-                <button
-                  type="button"
-                  className="vt"
-                  onClick={() => setActivePackage(index)}
-                  aria-expanded={activePackage === index}
-                >
-                  {item.name}
-                </button>
-                <div className="bd">
-                  <div>
-                    {item.recommended && <span className="fv">FAVE</span>}
-                    <span className="vb">{item.vibe}</span>
-                    <h2>{item.name}</h2>
-                    <p>{item.inclusion}</p>
-                    <div className="inc">
-                      {item.features.map((feature) => <span key={feature}>{feature}</span>)}
+          <div className="pill">{bm ? "Pakej Perkahwinan" : "Wedding Package"}</div>
+          <h1>Senang <span className="ser mk">Wedding Package.</span></h1>
+          <p className="sub">{bm
+            ? "Untuk nikah dan sanding pada hari yang sama, sehingga 8 jam. Semua harga pakej dan pilihan servis diberi melalui WhatsApp."
+            : "For akad nikah and reception on the same day, for up to 8 hours. All package and service prices are provided through WhatsApp."}</p>
+          <div className="package-card">
+            {packages.map((item) => (
+              <article key={item.tier}>
+                <div className="package-card__intro">
+                  <span className="ey">{bm ? "Edisi Khas 2027" : "Special 2027 Edition"}</span>
+                  <h2>{bm ? item.name : item.nameEn}</h2>
+                  <p>{bm ? item.inclusion : item.inclusionEn}</p>
+                  <strong>{bm ? item.guestRange : item.guestRangeEn}</strong>
+                </div>
+                <div className="package-card__lists">
+                  <section className="package-card__group">
+                    <h3>{bm ? "Semua dalam satu pakej" : "All-inclusive"}</h3>
+                    <ul>
+                      {(bm ? item.features : item.featuresEn).map((feature) => <li key={feature}>{feature}</li>)}
+                    </ul>
+                  </section>
+                  <section className="package-card__group">
+                    <h3>{bm ? "Juga termasuk" : "Also included"}</h3>
+                    <ul>
+                      {(bm ? item.benefits : item.benefitsEn).map((benefit) => <li key={benefit}>{benefit}</li>)}
+                    </ul>
+                  </section>
+                </div>
+                <div className="package-card__extras">
+                  <p className="package-card__bonus">
+                    <span>{bm ? "Percuma" : "Complimentary"}</span>
+                    <strong>{bm ? item.bonus : item.bonusEn}</strong>
+                  </p>
+                  <p className="package-card__promotion">{bm ? item.promotion : item.promotionEn}</p>
+                </div>
+                <div className="package-card__stats">
+                  {item.socialProof.map((stat) => (
+                    <div className="package-card__stat" key={stat.value}>
+                      <strong>{stat.value}</strong>
+                      <span>{bm ? stat.label : stat.labelEn}</span>
                     </div>
-                    <ImageLightbox
-                      src="/images/senang-wedding-package-2027.jpg"
-                      alt="Flyer Senang Wedding Package 2027"
-                      triggerLabel="Tekan untuk besarkan flyer pakej"
-                      className="package-flyer-trigger"
-                      width={768}
-                      height={1024}
-                    />
+                  ))}
+                </div>
+                <div className="package-card__footer">
+                  <div className="pr">
+                    <span>{bm ? item.price : item.priceEn}</span>
                   </div>
-                  <div>
-                    <div className="pr"><span>{item.price}</span><small>{item.guestRange}</small></div>
-                    <WhatsAppButton
-                      className="btn bk sm"
-                      variant="dark"
-                      message={item.message}
-                    >
-                      {item.action} <ArrowUpRight className="i" aria-hidden="true" />
-                    </WhatsAppButton>
-                  </div>
+                  <WhatsAppButton
+                    className="btn bk sm"
+                    variant="dark"
+                    message={bm ? item.message : item.messageEn}
+                  >
+                    {bm ? item.action : item.actionEn} <ArrowUpRight className="i" aria-hidden="true" />
+                  </WhatsAppButton>
                 </div>
               </article>
             ))}
           </div>
-          <p className="note">Harga pakej dikongsi selepas semakan tarikh dan lokasi.</p>
         </div>
       </header>
-
-      <section className="addons">
-        <div className="w">
-          <h2>Termasuk dalam <span className="ser">pakej.</span></h2>
-          <div className="ag">
-            {packageAddons.map((addon) => (
-              <article className="ac" key={addon.title}>
-                <div><span className="tag">{addon.tag}</span><h3>{addon.title}</h3><p>{addon.description}</p></div>
-                <b>{addon.price}</b>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div className="w">
-          <h2>Soalan yang <span className="ser mk">selalu ditanya.</span></h2>
-          <div className="fq">
-            {packageFaqs.map((faq) => (
-              <article className="fi" key={faq.question}>
-                <h3>{faq.question}</h3>
-                <p>{faq.answer}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
     </>
   );
 }

@@ -5,19 +5,29 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { publicAssetPath } from "@/lib/public-asset";
-
-const menuLinks = [
-  ["Home", "/#top"],
-  ["Check Tarikh", "/#tarikh"],
-  ["Pakej", "/packages"],
-  ["Media Gallery", "/gallery"],
-  ["Vibe Check & Pasukan", "/vibe-check"],
-  ["Testimoni", "/#kata"],
-  ["DM Kami", "/#hubungi"],
-];
+import { useLanguage } from "@/components/language-provider";
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { language, setLanguage } = useLanguage();
+
+  const menuLinks = language === "bm"
+    ? [
+        ["Utama", "/#top"],
+        ["Servis Kami", "/services"],
+        ["Senang Wedding Package", "/packages"],
+        ["Portfolio Acara", "/gallery"],
+        ["Tentang Kami", "/vibe-check"],
+        ["Hubungi Kami", "/contact"],
+      ]
+    : [
+        ["Home", "/#top"],
+        ["Our Services", "/services"],
+        ["Senang Wedding Package", "/packages"],
+        ["Event Portfolio", "/gallery"],
+        ["About Us", "/vibe-check"],
+        ["Contact Us", "/contact"],
+      ];
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -42,11 +52,15 @@ export function SiteHeader() {
             aria-expanded={menuOpen}
             aria-controls="main-menu"
           >
-            {menuOpen ? "Close" : "Menu"}
+            {menuOpen ? (language === "bm" ? "Tutup" : "Close") : "Menu"}
           </button>
-          <Link className="btn pk" href="/packages">Pakej</Link>
-          <Link className="btn gd" href="/booking">
-            Lock Tarikh <ArrowUpRight className="i" aria-hidden="true" />
+          <div className="language-switch" aria-label="Language">
+            <button type="button" className={language === "bm" ? "on" : ""} onClick={() => setLanguage("bm")} aria-pressed={language === "bm"}>BM</button>
+            <button type="button" className={language === "en" ? "on" : ""} onClick={() => setLanguage("en")} aria-pressed={language === "en"}>EN</button>
+          </div>
+          <Link className="btn pk" href="/packages">{language === "bm" ? "Pakej" : "Package"}</Link>
+          <Link className="btn gd" href="/contact">
+            {language === "bm" ? "Bincang Acara" : "Discuss Event"} <ArrowUpRight className="i" aria-hidden="true" />
           </Link>
         </div>
       </nav>

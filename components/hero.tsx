@@ -17,6 +17,7 @@ import {
   type AvailabilityStatus,
 } from "@/lib/availability";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { useLanguage } from "@/components/language-provider";
 
 const monthNames = [
   "Januari", "Februari", "Mac", "April", "Mei", "Jun",
@@ -241,22 +242,29 @@ function DateSection() {
 }
 
 export function Hero() {
+  const { language } = useLanguage();
+  const bm = language === "bm";
+
   return (
     <header className="hero" id="hero">
       <div className="w">
         <div className="hg">
           <div>
-            <div className="pill">2026 / 2027 Slots Open · Seluruh Malaysia</div>
-            <h1 className="hx">Kahwin je.<br />Biar kami <span className="mk">settle.</span></h1>
-            <p className="l">Moodboard aesthetic, vendor on time, timeline jalan. Kau fokus pilih outfit, bergambar, dan enjoy your day.</p>
-            <q>No spreadsheet tears. Just happy tears.</q>
+            <div className="pill">{bm ? "Pengurusan Acara & Majlis" : "Event & Celebration Management"}</div>
+            <h1 className="hx">{bm ? "Kami datang," : "We come,"}<br /><span className="mk">{bm ? "anda senang." : "you relax."}</span></h1>
+            <p className="l">{bm
+              ? "Dari acara korporat dan pelancaran produk hingga majlis perkahwinan, kami susun atur cara, selaras pasukan dan kendalikan perjalanan acara pada hari sebenar."
+              : "From corporate events and product launches to weddings, we organise the run of show, align the team and manage the event from start to finish."}</p>
+            <q>{bm ? "Teratur di belakang. Lancar di hadapan." : "Organised behind the scenes. Seamless on stage."}</q>
             <div className="acts">
-              <Link className="btn bk" href="/booking">Lock tarikh dulu <ArrowUpRight className="i" aria-hidden="true" /></Link>
-              <WhatsAppButton className="btn wa" variant="outline" message="Hi SenangPlanner, saya ingin berbincang tentang majlis saya.">
-                Chat kat WhatsApp
+              <WhatsAppButton className="btn bk" variant="dark" message={bm
+                ? "Hi Senang Planner! Saya ingin berbincang tentang acara saya."
+                : "Hi Senang Planner! I would like to discuss my event."}>
+                {bm ? "Bincang Acara Anda" : "Discuss Your Event"} <ArrowUpRight className="i" aria-hidden="true" />
               </WhatsAppButton>
+              <Link className="btn wa" href="/#servis">{bm ? "Terokai Servis Kami" : "Explore Our Services"}</Link>
             </div>
-            <div className="fine">Free vibe check · Reply bawah 24 jam · Transparent pricing</div>
+            <div className="fine">{bm ? "Kuala Lumpur · Selangor · Negeri Sembilan" : "Kuala Lumpur · Selangor · Negeri Sembilan"}</div>
           </div>
           <div className="col" id="col" aria-label="Kolaj majlis perkahwinan">
             <div className="fr c1">
